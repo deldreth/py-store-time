@@ -83,7 +83,7 @@ class User extends React.Component {
         <Card initiallyExpanded={true}>
           <CardHeader
             title={this.state.queue.user.username}
-            subtitle={this.state.queue.real_date}
+            subtitle={this.state.queue.last_date}
             avatar={<Avatar>{this.state.queue.user.username.substring(0,2)}</Avatar>}>
           </CardHeader>
           <CardActions>
