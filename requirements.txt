@@ -1,0 +1,9 @@
+Django==1.8.6
+psycopg2
+djangorestframework
+django-rest-swagger
+django-allauth==0.23.0
+django-rest-auth
+python-dateutil
+whitenoise==2.0.4
+dj-database-url==0.3.0

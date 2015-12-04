@@ -1,0 +1,9 @@
+*.pyc
+*.sqlite3
+node_modules
+static/build
+*.sublime*
+ripl.json
+staticfiles
+htmlcov
+.coverage

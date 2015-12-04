@@ -1,0 +1,93 @@
+var React = require('react');
+
+import { Col, Row } from 'react-bootstrap';
+
+const TextField = require('material-ui/lib/text-field');
+const RaisedButton = require('material-ui/lib/raised-button');
+
+const AuthStore = require('../../stores/AuthStore');
+const UserActions = require('../../actions/UserActions');
+
+
+class Login extends React.Component {
+  constructor () {
+    super();
+    this._onChange = this._onChange.bind(this);
+    this._login = this._login.bind(this);
+    
+    AuthStore.addChangeListener(this._onChange);
+
+    this.state = this.getState();
+  }
+
+  getState () {
+    return {
+      user: AuthStore.getUser()
+    }
+  }
+
+  componentWillUnmount () {
+    AuthStore.removeChangeListener(this._onChange);
+  }
+
+  render () {
+    return (
+      <div>
+        <form ref='loginForm'>
+          <Row>
+            <Col md={12}>
+              <TextField
+                name='username'
+                hintText='Wut is dat user name? Tsk tsk.'
+                floatingLabelText='Username'
+                type='text'
+                fullWidth={true}/>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+              <TextField
+                name='password'
+                hintText='Much secure.'
+                floatingLabelText='Password'
+                type='password'
+                fullWidth={true}/>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12} className='text-right'>
+              <RaisedButton
+                primary={true}
+                label='Log In'
+                onTouchTap={this._login}/>
+            </Col>
+          </Row>
+        </form>
+
+        <hr/>
+
+        <div className='text-center'>
+          <RaisedButton
+            linkButton={true}
+            label='Sign Up'
+            href='#/signup'/>
+        </div>
+      </div>
+    );
+  }
+
+  _login () {
+    var formData = $(this.refs.loginForm).serializeArray();
+    var formObject = {};
+    formData.forEach(function (input) {
+      formObject[input.name] = input.value;
+    });
+    UserActions.login(formObject);
+  }
+
+  _onChange () {
+    this.setState(this.getState());
+  }
+}
+
+module.exports = Login;
