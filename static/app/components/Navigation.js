@@ -28,7 +28,7 @@ class Navigation extends React.Component {
   render () {
     return (
       <div>
-        <LeftNav ref="leftNav" docked={false} menuItems={menuItems} />
+        <LeftNav ref="leftNav" docked={false} />
 
         <AppBar
           title="Store Time"

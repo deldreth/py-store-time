@@ -71,8 +71,8 @@ class User extends React.Component {
         if (this.state.userId == object.user) {
           return (
             <TableRow key={object.id}>
-              <TableRowColumn>{object.real_date}</TableRowColumn>
-              <TableRowColumn>{object.real_time}</TableRowColumn>
+              <TableRowColumn>{object.date}</TableRowColumn>
+              <TableRowColumn>{object.time}</TableRowColumn>
               <TableRowColumn></TableRowColumn>
             </TableRow>
           );

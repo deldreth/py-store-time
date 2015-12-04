@@ -45,7 +45,7 @@ class Queue extends React.Component {
               key={queue.user.id}
               leftAvatar={<Avatar>{queue.user.username.substring(0,2)}</Avatar>}
               primaryText={queue.user.username}
-              secondaryText={queue.real_date}
+              secondaryText={queue.last_date}
               href={'#/user/' + queue.user.id}>
             </ListItem>
         );

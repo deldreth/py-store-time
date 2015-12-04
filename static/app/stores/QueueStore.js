@@ -1,4 +1,5 @@
 var EventEmitter = require('events').EventEmitter;
+var moment = require('moment');
 import Dispatcher from '../dispatcher/Dispatcher';
 import ActionTypes from '../constants/Constants';
 
@@ -22,6 +23,10 @@ class QueueStore extends EventEmitter {
       cache: false,
     })
     .done((data) => {
+      data.forEach(entry => {
+        var date = new Date(entry.last_date).toISOString();
+        entry.last_date = moment(date).format('MMMM Do YYYY, h:mm a');
+      });
       this.queue = data;
       this.loaded = true;
       this.emitChange();
@@ -75,6 +80,29 @@ class QueueStore extends EventEmitter {
           queue[index] = data;
         }
       });
+      this.emitChange();
+      this.refresh();
+    })
+    .fail((xhr, status, err) => {
+      this.emitChange();
+    });
+  }
+
+  refresh () {
+    $.ajax({
+      url: this.api,
+      method: 'GET',
+      headers: {
+        'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
+      },
+      cache: false,
+    })
+    .done((data) => {
+      data.forEach(entry => {
+        var date = new Date(entry.last_date).toISOString();
+        entry.last_date = moment(date).format('MMMM Do YYYY, h:mm a');
+      });
+      this.queue = data;
       this.emitChange();
     })
     .fail((xhr, status, err) => {

@@ -1,4 +1,5 @@
 var EventEmitter = require('events').EventEmitter;
+var moment = require('moment');
 import Dispatcher from '../dispatcher/Dispatcher';
 import ActionTypes from '../constants/Constants';
 
@@ -22,6 +23,11 @@ class HistoryStore extends EventEmitter {
       cache: false,
     })
     .done((data) => {
+      data.forEach(entry => {
+        var date = new Date(entry.date).toISOString();
+        entry.date = moment(date).format('MM/DD/YYYY');
+        entry.time = moment(date).format('h:mm a');
+      });
       this.history = data;
       this.loaded = true;
       this.emitChange();
@@ -50,6 +56,9 @@ class HistoryStore extends EventEmitter {
       cache: false,
     })
     .done((data) => {
+      var date = new Date(data.date).toISOString();
+      data.date = moment(date).format('MM/DD/YYYY');
+      data.time = moment(date).format('h:mm a');
       this.history.unshift(data);
     })
     .fail((xhr, status, err) => {
