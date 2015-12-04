@@ -9,7 +9,7 @@ DATABASES['default'] = dj_database_url.config()
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['storetime.herokuapp.com']
 
