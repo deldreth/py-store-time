@@ -11,22 +11,11 @@ class Queue (models.Model):
     class Meta:
         ordering = ['last_date']
 
-    @property
-    def real_date(self):
-        return self.last_date.strftime('%m/%d/%Y %I:%M %p')
-
 
 class History (models.Model):
     user = models.ForeignKey(User)
     date = models.DateTimeField()
+    amount = models.IntegerField()
 
     class Meta:
         ordering = ['-date']
-
-    @property
-    def real_date(self):
-        return self.date.strftime('%m/%d/%Y')
-
-    @property
-    def real_time(self):
-        return self.date.strftime('%I:%M %p')

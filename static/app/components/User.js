@@ -28,6 +28,8 @@ const QueueActions = require('../actions/QueueActions');
 const QueueStore = require('../stores/QueueStore');
 const HistoryActions = require('../actions/HistoryActions');
 const HistoryStore = require('../stores/HistoryStore');
+// const Payment = require('./Payment');
+import Payment from './Payment';
 
 class User extends React.Component {
   constructor () {
@@ -73,42 +75,46 @@ class User extends React.Component {
             <TableRow key={object.id}>
               <TableRowColumn>{object.date}</TableRowColumn>
               <TableRowColumn>{object.time}</TableRowColumn>
-              <TableRowColumn></TableRowColumn>
+              <TableRowColumn>{object.amount}</TableRowColumn>
             </TableRow>
           );
         }
       });
 
       context = (
-        <Card initiallyExpanded={true}>
-          <CardHeader
-            title={this.state.queue.user.username}
-            subtitle={this.state.queue.last_date}
-            avatar={<Avatar>{this.state.queue.user.username.substring(0,2)}</Avatar>}>
-          </CardHeader>
-          <CardActions>
-            <RaisedButton 
-              label="Pay"
-              primary={true}
-              fullWidth={true}
-              onTouchTap={this._pay}/>
-          </CardActions>
-          <CardText>
-            <h4>Woo Dat History</h4>
-            <Table>
-              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                <TableRow>
-                  <TableHeaderColumn>Date</TableHeaderColumn>
-                  <TableHeaderColumn>Time</TableHeaderColumn>
-                  <TableHeaderColumn>Amount</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody displayRowCheckbox={false}>
-                {history}
-              </TableBody>
-            </Table>
-          </CardText>
-        </Card>
+        <div>
+          <Card initiallyExpanded={true}>
+            <CardHeader
+              title={this.state.queue.user.username}
+              subtitle={this.state.queue.last_date}
+              avatar={<Avatar>{this.state.queue.user.username.substring(0,2)}</Avatar>}>
+            </CardHeader>
+            <CardActions>
+              <RaisedButton 
+                label="Pay"
+                primary={true}
+                fullWidth={true}
+                onTouchTap={this._pay}/>
+            </CardActions>
+            <CardText>
+              <h4>Woo Dat History</h4>
+              <Table>
+                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                  <TableRow>
+                    <TableHeaderColumn>Date</TableHeaderColumn>
+                    <TableHeaderColumn>Time</TableHeaderColumn>
+                    <TableHeaderColumn>Amount</TableHeaderColumn>
+                  </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                  {history}
+                </TableBody>
+              </Table>
+            </CardText>
+          </Card>
+
+          <Payment ref='paymentDialog' display={this.state.payment} user={this.state.userId} />
+        </div>
       );
     }
     return (
@@ -120,8 +126,9 @@ class User extends React.Component {
   }
 
   _pay () {
-    QueueActions.update(this.state.queue);
-    HistoryActions.create(this.state.queue);
+    // QueueActions.update(this.state.queue);
+    // HistoryActions.create(this.state.queue);
+    this.refs.paymentDialog.show();
   }
 
   _onChange () {

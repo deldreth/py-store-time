@@ -75,11 +75,11 @@ class QueueStore extends EventEmitter {
     })
     .done((data) => {
       // Replace the queue state with the new data
-      this.queue.forEach((object, index, queue) => {
-        if (object.id == data.id) {
-          queue[index] = data;
-        }
-      });
+      // this.queue.forEach((object, index, queue) => {
+      //   if (object.id == data.id) {
+      //     queue[index] = data;
+      //   }
+      // });
       this.emitChange();
       this.refresh();
     })

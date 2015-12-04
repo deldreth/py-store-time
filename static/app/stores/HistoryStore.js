@@ -50,8 +50,9 @@ class HistoryStore extends EventEmitter {
         'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
       },
       data: {
-        user: data.user.id,
-        date: new Date().toISOString()
+        user: data.queue.user.id,
+        date: new Date().toISOString(),
+        amount: parseInt(data.amount)
       },
       cache: false,
     })
