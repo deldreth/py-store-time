@@ -105,7 +105,6 @@ queueStore.dispatchToken = Dispatcher.register(action => {switch (action.actionT
     queueStore.pay(action.data);
     break;
   default:
-    console.log('no op');
     // no op
 }});
 

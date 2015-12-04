@@ -60,7 +60,6 @@ class User extends React.Component {
   }
 
   render () {
-    console.log(this.state);
     var context = (
       <div className='text-center'>
         <CircularProgress mode='indeterminate' size={5} />
@@ -69,7 +68,6 @@ class User extends React.Component {
 
     if (this.state != null) {
       var history = this.state.history.map((object) => {
-        console.log(this.state.userId);
         if (this.state.userId == object.user) {
           return (
             <TableRow key={object.id}>

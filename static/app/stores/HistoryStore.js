@@ -37,7 +37,6 @@ class HistoryStore extends EventEmitter {
   }
 
   create (data) {
-    console.log(data.user);
     $.ajax({
       url: this.api,
       method: 'POST',
@@ -77,7 +76,6 @@ historyStore.dispatchToken = Dispatcher.register(action => {switch (action.actio
     historyStore.create(action.data);
     break;
   default:
-    console.log('no op');
     // no op
 }});
 

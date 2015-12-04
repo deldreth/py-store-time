@@ -23,7 +23,6 @@ class Navigation extends React.Component {
 
   _getSelectedIndex() {
     let currentItem;
-    console.log(currentItem);
   }
 
   render () {
