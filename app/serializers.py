@@ -25,3 +25,8 @@ class HistorySerializer (serializers.ModelSerializer):
     class Meta:
         model = History
         fields = ('id', 'user', 'date', 'amount')
+
+
+class StatsSerializer (serializers.Serializer):
+    history_sums = serializers.ListField()
+    history_avgs = serializers.ListField()

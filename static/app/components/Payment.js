@@ -44,7 +44,7 @@ export default class Payment extends React.Component {
 
   componentDidUpdate () {
     if (this.state.display) {
-      this.refs.amountTextField.focus();
+      // this.refs.amountTextField.focus();
     }
   }
 
