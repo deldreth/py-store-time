@@ -47,8 +47,10 @@ class StatsViewSet (viewsets.ViewSet):
             sums['user'] = user.username
 
         previous_date = datetime.date.today() + relativedelta(days=-7)
+        today = datetime.datetime.today().replace(hour=23,
+                                                  minute=59, second=59)
         history_avgs = History.objects.filter(
-            date__range=[previous_date, datetime.date.today()]).values(
+            date__range=[previous_date, today]).values(
             'user').annotate(Avg('amount')).order_by('-amount__avg')
 
         for avgs in history_avgs:
