@@ -9,10 +9,12 @@ class HistoryStore extends EventEmitter {
   constructor() {
     super();
     this.history = [];
+    this.stats = null;
     this.loaded = false;
     this.errors = {};
 
     this.api = 'api/history/';
+    this.api_stats = 'api/stats/';
 
     $.ajax({
       url: this.api,
@@ -36,10 +38,32 @@ class HistoryStore extends EventEmitter {
       this.loaded = true;
       this.emitChange();
     });
+
+    $.ajax({
+      url: this.api_stats + 'aggregates',
+      method: 'GET',
+      headers: {
+        'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
+      },
+      cache: false,
+    })
+    .done((data) => {
+      this.stats = data;
+      this.loaded = true;
+      this.emitChange();
+    })
+    .fail((xhr, status, err) => {
+      this.loaded = true;
+      this.emitChange();
+    });
   }
 
   getHistory () {
     return this.history;
+  }
+
+  getStats () {
+    return this.stats;
   }
 
   create (data) {

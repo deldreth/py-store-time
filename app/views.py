@@ -39,8 +39,8 @@ class StatsViewSet (viewsets.ViewSet):
 
     @list_route(methods=['GET'])
     def aggregates(self, request):
-        history_sums = History.objects.values('user').annotate(
-            Sum('amount')).order_by('-amount__sum')
+        history_sums = History.objects.filter(amount__gt=0).values(
+            'user').annotate(Sum('amount')).order_by('-amount__sum')
 
         for sums in history_sums:
             user = User.objects.get(pk=sums['user'])
@@ -50,7 +50,8 @@ class StatsViewSet (viewsets.ViewSet):
         today = datetime.datetime.today().replace(hour=23,
                                                   minute=59, second=59)
         history_avgs = History.objects.filter(
-            date__range=[previous_date, today]).values(
+            date__range=[previous_date, today],
+            amount__gt=0).values(
             'user').annotate(Avg('amount')).order_by('-amount__avg')
 
         for avgs in history_avgs:

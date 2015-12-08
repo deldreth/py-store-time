@@ -18,7 +18,7 @@ ReactDOM.render(
 
     <div className='container'>
       <Row>
-        <Col md={6} mdOffset={3}>
+        <Col md={10} mdOffset={1}>
           <Router>
             <Route path='/' component={StoreTime}>
               <Route path='/user/:userId' component={User}/>
