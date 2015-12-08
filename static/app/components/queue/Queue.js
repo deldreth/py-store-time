@@ -3,6 +3,8 @@ var React = require('react');
 import { Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router';
 
+let Colors = require('material-ui/lib/styles/colors');
+
 const CircularProgress = require('material-ui/lib/circular-progress');
 
 const List = require('material-ui/lib/lists/list');
@@ -11,42 +13,74 @@ const ListItem = require('material-ui/lib/lists/list-item');
 const Paper = require('material-ui/lib/paper');
 const Avatar = require('material-ui/lib/avatar');
 const RaisedButton = require('material-ui/lib/raised-button');
-const FloatingActionButton = require('material-ui/lib/floating-action-button');
+const FontIcon = require('material-ui/lib/font-icon');
+const IconButton = require('material-ui/lib/icon-button');
 
 const QueueActions = require('../../actions/QueueActions');
 const QueueStore = require('../../stores/QueueStore');
+const ShartActions = require('../../actions/ShartActions');
+const ShartStore = require('../../stores/ShartStore');
 
 
 class Queue extends React.Component {
   constructor () {
     super();
     this._onChange = this._onChange.bind(this);
+    this._listItemTouch = this._listItemTouch.bind(this);
+    this._sharted = this._sharted.bind(this);
 
     this.state = this.getState();
     QueueStore.addChangeListener(this._onChange);
+    ShartStore.addChangeListener(this._onChange);
   }
 
   getState () {
     return {
       queue: QueueStore.getQueue(),
+      sharts: ShartStore.getSharts()
     };
   }
 
   componentWillUnmount () {
     QueueStore.removeChangeListener(this._onChange);
+    ShartStore.removeChangeListener(this._onChange);
   }
 
   render () {
     var queues = []
     if (this.state.queue.length > 0) {
       queues = this.state.queue.map((queue) => {
+        var sharts = 0;
+        if (this.state.sharts.length > 0) {
+          this.state.sharts.forEach((shart) => {
+            if (queue.user.id == shart.user) {
+              sharts += 1;
+            }
+          });
+        }
+
         return (
             <ListItem
               key={queue.user.id}
               leftAvatar={<Avatar>{queue.user.username.substring(0,2)}</Avatar>}
               primaryText={queue.user.username}
-              secondaryText={queue.last_date}
-              href={'#/user/' + queue.user.id}>
+              secondaryText={
+                <p>
+                  {queue.last_date}<br/>
+                  <span style={{color: Colors.lime900}}>{sharts} sharts</span>
+                </p>
+              }
+              secondaryTextLines={2}
+              rightIconButton={
+                <IconButton
+                  color={Colors.lime900}
+                  tooltip='+1 Shart. Shoo.'
+                  iconClassName="material-icons"
+                  onTouchTap={this._sharted.bind(this, queue.user.id)}>
+                  cloud_queue
+                </IconButton>
+              }
+              onTouchTap={this._listItemTouch.bind(this, queue.user.id)}>
             </ListItem>
         );
       });
@@ -62,6 +96,16 @@ class Queue extends React.Component {
         </Paper>
       </div>
     );
+  }
+
+  _listItemTouch (id) {
+    this.props.history.pushState('user', '/user/' + id);
+  }
+
+  _sharted (id) {
+    ShartActions.create({
+      user: id
+    });
   }
 
   _onChange () {

@@ -7,8 +7,9 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import list_route
 from dateutil.relativedelta import relativedelta
 
-from .models import Queue, History
-from .serializers import QueueSerializer, HistorySerializer, StatsSerializer
+from .models import Queue, History, Shart
+from .serializers import (
+    QueueSerializer, HistorySerializer, StatsSerializer, ShartSerializer)
 
 import datetime
 
@@ -31,6 +32,12 @@ class QueueViewSet (viewsets.ModelViewSet):
 class HistoryViewSet (viewsets.ModelViewSet):
     queryset = History.objects.all()
     serializer_class = HistorySerializer
+    authentication_classes = [SessionAuthentication]
+
+
+class ShartViewSet (viewsets.ModelViewSet):
+    queryset = Shart.objects.all()
+    serializer_class = ShartSerializer
     authentication_classes = [SessionAuthentication]
 
 

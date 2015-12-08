@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from .models import Queue, History
+from .models import Queue, History, Shart
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,6 +25,13 @@ class HistorySerializer (serializers.ModelSerializer):
     class Meta:
         model = History
         fields = ('id', 'user', 'date', 'amount')
+
+
+class ShartSerializer (serializers.ModelSerializer):
+
+    class Meta:
+        model = Shart
+        fields = ('id', 'user', 'date')
 
 
 class StatsSerializer (serializers.Serializer):
