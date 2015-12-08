@@ -2,6 +2,8 @@ var React = require('react');
 const AppBar = require('material-ui/lib/app-bar');
 const LeftNav = require('material-ui/lib/left-nav');
 const MenuItem = require('material-ui/lib/menu/menu-item');
+const ThemeManager = require('material-ui/lib/styles/theme-manager');
+const MyRawTheme = require('../theme');
 
 var menuItems = [
   { route: 'history', text: 'History' },
@@ -21,6 +23,12 @@ class Navigation extends React.Component {
     this.refs.leftNav.toggle();
   }
 
+  getChildContext() {
+    return {
+      muiTheme: ThemeManager.getMuiTheme(MyRawTheme),
+    };
+  }
+
   _getSelectedIndex() {
     let currentItem;
   }
@@ -38,5 +46,9 @@ class Navigation extends React.Component {
     );
   }
 }
+
+Navigation.childContextTypes = {
+  muiTheme: React.PropTypes.object
+};
 
 module.exports = Navigation;

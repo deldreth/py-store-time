@@ -8,6 +8,7 @@ const QueueStore = require('../stores/QueueStore');
 const HistoryActions = require('../actions/HistoryActions');
 const HistoryStore = require('../stores/HistoryStore');
 
+
 export default class Payment extends React.Component {
   constructor(props) {
     super(props);

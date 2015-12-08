@@ -97,9 +97,13 @@ class User extends React.Component {
                 onTouchTap={this._pay}/>
             </CardActions>
             <CardText>
-              <h4>Woo Dat History</h4>
               <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                  <TableRow>
+                    <TableHeaderColumn colSpan="3" tooltip='Dem histories' style={{textAlign: 'center'}}>
+                      Dat History
+                    </TableHeaderColumn>
+                  </TableRow>
                   <TableRow>
                     <TableHeaderColumn>Date</TableHeaderColumn>
                     <TableHeaderColumn>Time</TableHeaderColumn>

@@ -1,13 +1,20 @@
 var React = require('react');
 
+import { Row, Col } from 'react-bootstrap';
+
 const CircularProgress = require('material-ui/lib/circular-progress');
 
+const ThemeManager = require('material-ui/lib/styles/theme-manager');
+const MyRawTheme = require('../theme');
+
+const Navigation = require('./Navigation');
 const Queue = require('./queue/Queue');
 const Login = require('./auth/Login');
 const AuthStore = require('../stores/AuthStore');
 const QueueStore = require('../stores/QueueStore');
+const Stats = require('./Stats');
 
-class StoreTime extends React.Component {
+class StoreTime extends React.Component { 
   constructor () {
     super();
     this._onChange = this._onChange.bind(this);
@@ -19,6 +26,12 @@ class StoreTime extends React.Component {
   getState () {
     return {
       user: AuthStore.getUser()
+    };
+  }
+
+  getChildContext() {
+    return {
+      muiTheme: ThemeManager.getMuiTheme(MyRawTheme),
     };
   }
 
@@ -42,7 +55,16 @@ class StoreTime extends React.Component {
         context = this.props.children;
       }
       else {
-        context = <Queue history={this.props.history} />;
+        context = (
+          <Row>
+          <Col md={6}>
+          <Queue history={this.props.history} />
+          </Col>
+          <Col md={6}>
+          <Stats />
+          </Col>
+          </Row>
+        );
       }
     }
     else if (AuthStore.loaded && this.state.user === null) {
@@ -60,5 +82,9 @@ class StoreTime extends React.Component {
     this.setState(this.getState());
   }
 }
+
+StoreTime.childContextTypes = {
+  muiTheme: React.PropTypes.object
+};
 
 module.exports = StoreTime;
