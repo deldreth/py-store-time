@@ -2,7 +2,11 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Queue, History
+from .models import Queue, History, Shart
+
+
+class QueueAdmin (admin.ModelAdmin):
+    list_display = ('user', 'last_date')
 
 
 class HistoryResource(resources.ModelResource):
@@ -19,5 +23,11 @@ class HistoryAdmin(ImportExportModelAdmin):
 
     list_display = ('id', 'user', 'date', 'amount')
 
-admin.site.register(Queue)
+
+class ShartAdmin (admin.ModelAdmin):
+    list_filter = ('user',)
+    list_display = ('user', 'date')
+
+admin.site.register(Queue, QueueAdmin)
 admin.site.register(History, HistoryAdmin)
+admin.site.register(Shart, ShartAdmin)
