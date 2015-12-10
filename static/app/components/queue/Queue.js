@@ -53,7 +53,7 @@ class Queue extends React.Component {
         var sharts = 0;
         if (this.state.sharts.length > 0) {
           this.state.sharts.forEach((shart) => {
-            if (queue.user.id == shart.user) {
+            if (queue.user.id == shart.user.id) {
               sharts += 1;
             }
           });

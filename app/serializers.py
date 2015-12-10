@@ -28,6 +28,7 @@ class HistorySerializer (serializers.ModelSerializer):
 
 
 class ShartSerializer (serializers.ModelSerializer):
+    user = UserSerializer()
 
     class Meta:
         model = Shart
@@ -37,3 +38,8 @@ class ShartSerializer (serializers.ModelSerializer):
 class StatsSerializer (serializers.Serializer):
     history_sums = serializers.ListField()
     history_avgs = serializers.ListField()
+
+
+class ShartStatsSerialiser (serializers.Serializer):
+    by_hour = serializers.DictField()
+    by_day = serializers.DictField()

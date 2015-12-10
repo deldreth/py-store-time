@@ -6,17 +6,15 @@ const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const MyRawTheme = require('../theme');
 
 var menuItems = [
-  { route: 'history', text: 'History' },
-  { type: MenuItem.Types.SUBHEADER, text: 'Settings' },
-  { route: 'settings', text: 'User' },
-  { route: 'logout', text: 'Log Out' },
+  { route: '/', text: 'Queue'},
+  { route: 'shart', text: 'Sharts' }
 ];
 
 class Navigation extends React.Component {
   constructor () {
     super();
     this.showNavigation = this.showNavigation.bind(this);
-    this._getSelectedIndex = this._getSelectedIndex.bind(this);
+    this._onNavChange = this._onNavChange.bind(this);
   }
 
   showNavigation (event) {
@@ -29,14 +27,18 @@ class Navigation extends React.Component {
     };
   }
 
-  _getSelectedIndex() {
-    let currentItem;
+  _onNavChange(e, key, payload) {
+    this.props.history.push(payload.route);
   }
 
   render () {
     return (
       <div>
-        <LeftNav ref="leftNav" docked={false} />
+        <LeftNav
+          ref="leftNav"
+          docked={false}
+          menuItems={menuItems}
+          onChange={this._onNavChange}/>
 
         <AppBar
           title="Store Time"

@@ -9,10 +9,12 @@ class ShartStore extends EventEmitter {
   constructor() {
     super();
     this.sharts = [];
+    this.stats = [];
     this.loaded = false;
     this.errors = {};
 
     this.api = 'api/shart/';
+    this.api_stats = 'api/shart/stats/'
 
     $.ajax({
       url: this.api,
@@ -35,10 +37,32 @@ class ShartStore extends EventEmitter {
       this.loaded = true;
       this.emitChange();
     });
+
+    $.ajax({
+      url: this.api_stats,
+      method: 'GET',
+      headers: {
+        'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
+      },
+      cache: false,
+    })
+    .done((data) => {
+      this.stats = data;
+      this.loaded = true;
+      this.emitChange();
+    })
+    .fail((xhr, status, err) => {
+      this.loaded = true;
+      this.emitChange();
+    });
   }
 
   getSharts () {
     return this.sharts;
+  }
+
+  getStats () {
+    return this.stats;
   }
 
   create (data) {

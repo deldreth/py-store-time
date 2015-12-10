@@ -57,12 +57,12 @@ class StoreTime extends React.Component {
       else {
         context = (
           <Row>
-          <Col md={6}>
-          <Queue history={this.props.history} />
-          </Col>
-          <Col md={6}>
-          <Stats />
-          </Col>
+            <Col md={6}>
+              <Queue history={this.props.history} />
+            </Col>
+            <Col md={6}>
+              <Stats />
+            </Col>
           </Row>
         );
       }
@@ -73,7 +73,15 @@ class StoreTime extends React.Component {
     
     return (
       <div>
-        {context}
+        <Navigation history={this.props.history} />
+
+        <div className='container'>
+          <Row>
+            <Col md={10} mdOffset={1}>
+              {context}
+            </Col>
+          </Row>
+        </div>
       </div>
     );
   }
