@@ -46,7 +46,7 @@ export default class Stats extends React.Component {
             key={avg.user}
             leftAvatar={<Avatar>{avg.user.substring(0,2)}</Avatar>}
             primaryText={avg.user}
-            secondaryText={'$' + avg.amount__avg}>
+            secondaryText={'$' + parseFloat(avg.amount__avg).toFixed(2)}>
           </ListItem>
         );
       });
