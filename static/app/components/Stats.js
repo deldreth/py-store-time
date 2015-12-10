@@ -35,7 +35,7 @@ export default class Stats extends React.Component {
             key={sum.user}
             leftAvatar={<Avatar>{sum.user.substring(0,2)}</Avatar>}
             primaryText={sum.user}
-            secondaryText={sum.amount__sum}>
+            secondaryText={'$' + sum.amount__sum}>
           </ListItem>
         );
       });
@@ -46,7 +46,7 @@ export default class Stats extends React.Component {
             key={avg.user}
             leftAvatar={<Avatar>{avg.user.substring(0,2)}</Avatar>}
             primaryText={avg.user}
-            secondaryText={avg.amount__avg}>
+            secondaryText={'$' + avg.amount__avg}>
           </ListItem>
         );
       });
@@ -56,14 +56,14 @@ export default class Stats extends React.Component {
       <div>
         <br/>
         <Paper zDepth={3}>
-          <List subheader='Big Spenders'>
+          <List subheader='Big Spenders (since forever)'>
             {sums}
           </List>
         </Paper>
 
         <br/>
         <Paper zDepth={3}>
-          <List subheader='Averages (past week)'>
+          <List subheader='Average Paid by User'>
             {avgs}
           </List>
         </Paper>
