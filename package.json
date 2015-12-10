@@ -39,6 +39,7 @@
     "react-dom": "^0.14.3",
     "react-router": "^1.0.0",
     "react-tap-event-plugin": "^0.2.1",
-    "webpack": "^1.11.0"
+    "webpack": "^1.11.0",
+    "react-google-charts": "^0.1.9"
   }
 }
