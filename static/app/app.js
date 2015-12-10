@@ -10,24 +10,15 @@ import { Col, Row } from 'react-bootstrap';
 var StoreTime = require('./components/StoreTime');
 var User = require('./components/User');
 var Signup = require('./components/auth/Signup');
-const Navigation = require('./components/Navigation');
+var Shart = require('./components/Shart');
 
 ReactDOM.render(
-  <div>
-    <Navigation />
-
-    <div className='container'>
-      <Row>
-        <Col md={10} mdOffset={1}>
-          <Router>
-            <Route path='/' component={StoreTime}>
-              <Route path='/user/:userId' component={User}/>
-            </Route>
-            <Route path='signup' component={Signup}/>
-          </Router>
-        </Col>
-      </Row>
-    </div>
-  </div>,
+  <Router>
+    <Route path='/' component={StoreTime}>
+      <Route path='/user/:userId' component={User}/>
+      <Route path='shart' component={Shart} />
+    </Route>
+    <Route path='signup' component={Signup}/>
+  </Router>,
   document.getElementById('app')
 );
