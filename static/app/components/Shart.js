@@ -34,8 +34,6 @@ export default class Shart extends React.Component {
         data: [['id', 'Hour', 'Count', 'Color', 'Count']],
         chartType: 'BarChart',
         options: {
-          width: 800,
-          height: 500,
           hAxis: {
             title: 'Hour',
             // min: 0,
@@ -60,43 +58,9 @@ export default class Shart extends React.Component {
         });
       }
 
-      // this.state.stats.by_hour.forEach((hour) => {
-      //   console.log(hour);
-      //   // var date = new Date(hour.dates);
-      //   // ByHourChart.data.push([date, hour.count]);
-      // });
-
       this.setState({
         ByHourChart: ByHourChart
       });
-
-      // var ByHourChart = {
-      //   data: [['Hour', 'Count']],
-      //   chartType: 'BarChart',
-      //   options: {
-      //     width: 800,
-      //     height: 500,
-      //     hAxis: {
-      //       title: 'Hour',
-      //       min: 0,
-      //       max: 23,
-      //       viewWindow: {
-      //         min: 0,
-      //         max: 23
-      //       }
-      //     },
-      //     vAxis: {title: 'Count'},
-      //   },
-      //   chartType: "BarChart"
-      // };
-
-      // this.state.stats.by_hour.forEach((hour) => {
-      //   ByHourChart.data.push([hour.hour, hour.count]);
-      // });
-
-      // this.setState({
-      //   ByHourChart: ByHourChart
-      // });
     }
   }
 
@@ -104,7 +68,7 @@ export default class Shart extends React.Component {
     return (
       <div>
         <ChartWrapper
-          width={"500px"}
+          width={'100%'}
           height={"300px"}
           data={this.state.ByHourChart.data}
           options={this.state.ByHourChart.options}

@@ -25,6 +25,6 @@ export default class ChartWrapper extends React.Component {
   }
 
   render() {
-  	return React.DOM.div({id: this.props.graphName, style: {height: "500px"}});
+  	return React.DOM.div({id: this.props.graphName, style: {height: this.props.height, width: this.props.width}});
   }
 }
