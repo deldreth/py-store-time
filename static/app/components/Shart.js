@@ -27,37 +27,76 @@ export default class Shart extends React.Component {
   }
 
   componentDidMount () {
-    if (this.state.stats.by_hour.length > 0) {
-      console.log('test');
+    if (this.state.stats.by_hour) {
+      // Bubble Chart
       var ByHourChart = {
-        data: [['User', 'Hour', 'Count', 'Color', 'Count']],
+        // data: [['Hour', 'Count']],
+        data: [['id', 'Hour', 'Count', 'Color', 'Count']],
         chartType: 'BarChart',
         options: {
           width: 800,
           height: 500,
           hAxis: {
             title: 'Hour',
-            min: 0,
-            max: 23,
-            viewWindow: {
-              min: 0,
-              max: 23
-            }
+            // min: 0,
+            // max: 23,
+            // viewWindow: {
+            //   min: 0,
+            //   max: 23
+            // }
           },
           vAxis: {title: 'Count'},
+          bubble: {
+            fontSize: 11
+          }
         },
         chartType: "BarChart"
       };
 
-      console.log('hour');
-      this.state.stats.by_hour.forEach((hour) => {
-        console.log(hour);
-        ByHourChart.data.push([hour.user, hour.hour, hour.count, hour.user, hour.count]);
-      });
+      var by_hour = this.state.stats.by_hour;
+      for(var date in by_hour) {
+        by_hour[date].data.forEach((data) => {
+          ByHourChart.data.push([data.user.substring(0, 2), new Date(data.date), data.count, data.user, data.count]);
+        });
+      }
+
+      // this.state.stats.by_hour.forEach((hour) => {
+      //   console.log(hour);
+      //   // var date = new Date(hour.dates);
+      //   // ByHourChart.data.push([date, hour.count]);
+      // });
 
       this.setState({
         ByHourChart: ByHourChart
       });
+
+      // var ByHourChart = {
+      //   data: [['Hour', 'Count']],
+      //   chartType: 'BarChart',
+      //   options: {
+      //     width: 800,
+      //     height: 500,
+      //     hAxis: {
+      //       title: 'Hour',
+      //       min: 0,
+      //       max: 23,
+      //       viewWindow: {
+      //         min: 0,
+      //         max: 23
+      //       }
+      //     },
+      //     vAxis: {title: 'Count'},
+      //   },
+      //   chartType: "BarChart"
+      // };
+
+      // this.state.stats.by_hour.forEach((hour) => {
+      //   ByHourChart.data.push([hour.hour, hour.count]);
+      // });
+
+      // this.setState({
+      //   ByHourChart: ByHourChart
+      // });
     }
   }
 

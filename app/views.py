@@ -11,6 +11,8 @@ from .models import Queue, History, Shart
 from .serializers import (
     QueueSerializer, HistorySerializer, StatsSerializer, ShartSerializer, ShartStatsSerialiser)
 
+import time
+
 
 class QueueViewSet (viewsets.ModelViewSet):
     queryset = Queue.objects.all()
@@ -62,15 +64,34 @@ class ShartViewSet (viewsets.ModelViewSet):
 
         cursor = connection.cursor()
 
-        cursor.execute('SELECT EXTRACT(hour FROM date) AS hour, \
+        # cursor.execute('SELECT date::DATE AS dates, EXTRACT(hour FROM date) AS hour, \
+        #                 COUNT(user_id), user_id \
+        #                 FROM app_shart \
+        #                 GROUP BY dates, user_id, hour')
+        cursor.execute('SELECT to_char(date, \'YYYY-MM-DD HH24:00:00 TZ\' ) AS dates, \
                         COUNT(user_id), user_id \
                         FROM app_shart \
-                        GROUP BY user_id, hour')
+                        GROUP BY dates, user_id')
         by_hour = self.dictfetchall(cursor)
 
-        for i, hour in enumerate(by_hour):
-            by_hour[i]['user'] = users.get(pk=hour['user_id']).username
-            by_hour[i]['hour'] = int(hour['hour'])
+        by_hours = {}
+        for hour in by_hour:
+            dates = hour['dates']
+            user = users.get(pk=hour['user_id']).username
+            if dates not in by_hours:
+                by_hours[dates] = {
+                    'data': []
+                }
+
+            by_hours[dates]['data'].append({
+                'user': user,
+                'date': hour['dates'],
+                'count': hour['count']
+                })
+
+        # for i, hour in enumerate(by_hour):
+        #     by_hour[i]['user'] = users.get(pk=hour['user_id']).username
+        #     by_hour[i]['hour'] = int(hour['hour'])
 
         cursor.execute('SELECT EXTRACT(DOW FROM date) AS day, \
                         COUNT(user_id), user_id \
@@ -82,8 +103,14 @@ class ShartViewSet (viewsets.ModelViewSet):
             by_day[i]['user'] = users.get(pk=day['user_id']).username
             by_day[i]['day'] = int(day['day'])
 
+        # for user in users:
+        #     by_hour2 = Shart.objects.filter(user=user).extra(select={
+        #         'hour': "EXTRACT(hour FROM date)"}).values('user', 'hour')
+        #     for hour in by_hour2:
+        #         print hour
+
         stats_serializer = ShartStatsSerialiser(data={
-            'by_hour': by_hour,
+            'by_hour': by_hours,
             'by_day': by_day
             })
 
