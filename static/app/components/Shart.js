@@ -17,7 +17,7 @@ export default class Shart extends React.Component {
     return {
       stats: ShartStore.getStats(),
       ByHourChart: {
-        columns: ['User', 'Day'],
+        columns: ['User', 'Hour'],
         rows: [],
         data: [],
         chartType: 'BarChart',
@@ -27,20 +27,32 @@ export default class Shart extends React.Component {
   }
 
   componentDidMount () {
-    if (this.state.stats.by_day.length > 0) {
+    if (this.state.stats.by_hour.length > 0) {
+      console.log('test');
       var ByHourChart = {
-        data: [['User', 'Day', {'role': 'style'}]],
+        data: [['User', 'Hour', 'Count', 'Color', 'Count']],
         chartType: 'BarChart',
         options: {
-          width: 500,
-          height: 300,
-          title: 'Test'
+          width: 800,
+          height: 500,
+          hAxis: {
+            title: 'Hour',
+            min: 0,
+            max: 23,
+            viewWindow: {
+              min: 0,
+              max: 23
+            }
+          },
+          vAxis: {title: 'Count'},
         },
         chartType: "BarChart"
       };
-      
-      var by_hour = this.state.stats.by_hour.forEach((hour) => {
-        ByHourChart.data.push(['user' + hour.user, hour.hour]);
+
+      console.log('hour');
+      this.state.stats.by_hour.forEach((hour) => {
+        console.log(hour);
+        ByHourChart.data.push([hour.user, hour.hour, hour.count, hour.user, hour.count]);
       });
 
       this.setState({
@@ -52,12 +64,12 @@ export default class Shart extends React.Component {
   render() {
     return (
       <div>
-        <ChartWrapper chartType={this.state.ByHourChart.chartType}
+        <ChartWrapper
           width={"500px"}
           height={"300px"}
           data={this.state.ByHourChart.data}
           options={this.state.ByHourChart.options}
-          graph_id='by-hour'/>
+          graphName='by-hour'/>
       </div>
     );
   }

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Sum, Avg, Count
+from django.db import connection
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -47,47 +48,43 @@ class ShartViewSet (viewsets.ModelViewSet):
 
         return Response({}, status.HTTP_200_OK)
 
+    def dictfetchall(self, cursor):
+        "Return all rows from a cursor as a dict"
+        columns = [col[0] for col in cursor.description]
+        return [
+            dict(zip(columns, row))
+            for row in cursor.fetchall()
+        ]
+
     @list_route(methods=['GET'])
     def stats(self, request):
         users = User.objects.all()
 
-        by_hours = {}
+        cursor = connection.cursor()
 
-        by_hour = Shart.objects.all().extra(select={
-            'hour': "EXTRACT(hour FROM date)"}).values('user', 'hour')
+        cursor.execute('SELECT EXTRACT(hour FROM date) AS hour, \
+                        COUNT(user_id), user_id \
+                        FROM app_shart \
+                        GROUP BY user_id, hour')
+        by_hour = self.dictfetchall(cursor)
 
-        for hour in by_hour:
-            user = users.get(pk=hour['user'])
-            hour = str(int(hour['hour']))
+        for i, hour in enumerate(by_hour):
+            by_hour[i]['user'] = users.get(pk=hour['user_id']).username
+            by_hour[i]['hour'] = int(hour['hour'])
 
-            if user not in by_hours:
-                by_hours[user] = {}
+        cursor.execute('SELECT EXTRACT(DOW FROM date) AS day, \
+                        COUNT(user_id), user_id \
+                        FROM app_shart \
+                        GROUP BY user_id, day')
+        by_day = self.dictfetchall(cursor)
 
-            if hour in by_hours[user]:
-                by_hours[user][hour] += 1
-            else:
-                by_hours[user][hour] = 1
-
-        by_day = Shart.objects.all().extra(select={
-            'day': "EXTRACT(DOW FROM date)"}).values('user', 'day')
-
-        by_days = {}
-        days_of_week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-        for day in by_day:
-            user = users.get(pk=day['user'])
-            day = days_of_week[int(day['day'])]
-
-            if user not in by_days:
-                by_days[user] = {}
-
-            if day in by_days[user]:
-                by_days[user][day] += 1
-            else:
-                by_days[user][day] = 1
+        for i, day in enumerate(by_day):
+            by_day[i]['user'] = users.get(pk=day['user_id']).username
+            by_day[i]['day'] = int(day['day'])
 
         stats_serializer = ShartStatsSerialiser(data={
-            'by_hour': by_hours,
-            'by_day': by_days
+            'by_hour': by_hour,
+            'by_day': by_day
             })
 
         if stats_serializer.is_valid():
