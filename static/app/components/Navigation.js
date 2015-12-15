@@ -3,6 +3,8 @@ const AppBar = require('material-ui/lib/app-bar');
 const LeftNav = require('material-ui/lib/left-nav');
 const MenuItem = require('material-ui/lib/menu/menu-item');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
+const LinearProgress = require('material-ui/lib/linear-progress');
+let Colors = require('material-ui/lib/styles/colors');
 const MyRawTheme = require('../theme');
 
 var menuItems = [

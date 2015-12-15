@@ -51,10 +51,17 @@ class Queue extends React.Component {
     if (this.state.queue.length > 0) {
       queues = this.state.queue.map((queue) => {
         var sharts = 0;
+        var sharts_today = 0;
         if (this.state.sharts.length > 0) {
           this.state.sharts.forEach((shart) => {
             if (queue.user.id == shart.user.id) {
               sharts += 1;
+
+              var today = new Date();
+              var shart_date = new Date(shart.date);
+              if (today.toDateString() == shart_date.toDateString()) {
+                sharts_today += 1;
+              }
             }
           });
         }
@@ -67,7 +74,7 @@ class Queue extends React.Component {
               secondaryText={
                 <p>
                   {queue.last_date}<br/>
-                  <span style={{color: Colors.lime900}}>{sharts} sharts</span>
+                  <span style={{color: Colors.lime900}}>{sharts} sharts, {sharts_today} today</span>
                 </p>
               }
               secondaryTextLines={2}

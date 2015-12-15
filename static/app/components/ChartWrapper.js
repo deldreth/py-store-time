@@ -4,6 +4,7 @@ var equal = require('deep-equal');
 export default class ChartWrapper extends React.Component {
   constructor(props) {
     super(props);
+    this.drawChart = this.drawChart.bind(this);
   }
 
   componentDidMount (){
@@ -14,17 +15,34 @@ export default class ChartWrapper extends React.Component {
     this.drawChart();
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return !equal(nextProps, this.props);
+  }
+
   drawChart (){
     var data = google.visualization.arrayToDataTable(this.props.data);
     var options = this.props.options;
+    var chart = null;
 
-    var chart = new google.visualization.BubbleChart(
-      document.getElementById(this.props.graphName)
-    );
+    console.log(this.props.chartType);
+
+    switch (this.props.chartType) {
+      case 'BubbleChart':
+        chart = new google.visualization.BubbleChart(
+          document.getElementById(this.props.graphName)
+        );
+        break;
+      case 'BarChart':
+        chart = new google.visualization.BarChart(
+          document.getElementById(this.props.graphName)
+        );
+        break;
+    }
+
     chart.draw(data, options);
   }
 
   render() {
-  	return React.DOM.div({id: this.props.graphName, style: {height: this.props.height, width: this.props.width}});
+    return React.DOM.div({id: this.props.graphName, style: {height: this.props.height, width: this.props.width}});
   }
 }

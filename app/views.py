@@ -11,6 +11,7 @@ from .models import Queue, History, Shart
 from .serializers import (
     QueueSerializer, HistorySerializer, StatsSerializer, ShartSerializer, ShartStatsSerialiser)
 
+import datetime
 import time
 
 
@@ -64,10 +65,6 @@ class ShartViewSet (viewsets.ModelViewSet):
 
         cursor = connection.cursor()
 
-        # cursor.execute('SELECT date::DATE AS dates, EXTRACT(hour FROM date) AS hour, \
-        #                 COUNT(user_id), user_id \
-        #                 FROM app_shart \
-        #                 GROUP BY dates, user_id, hour')
         cursor.execute('SELECT to_char(date, \'YYYY-MM-DD HH24:00:00 TZ\' ) AS dates, \
                         COUNT(user_id), user_id \
                         FROM app_shart \
@@ -89,10 +86,6 @@ class ShartViewSet (viewsets.ModelViewSet):
                 'count': hour['count']
                 })
 
-        # for i, hour in enumerate(by_hour):
-        #     by_hour[i]['user'] = users.get(pk=hour['user_id']).username
-        #     by_hour[i]['hour'] = int(hour['hour'])
-
         cursor.execute('SELECT EXTRACT(DOW FROM date) AS day, \
                         COUNT(user_id), user_id \
                         FROM app_shart \
@@ -102,12 +95,6 @@ class ShartViewSet (viewsets.ModelViewSet):
         for i, day in enumerate(by_day):
             by_day[i]['user'] = users.get(pk=day['user_id']).username
             by_day[i]['day'] = int(day['day'])
-
-        # for user in users:
-        #     by_hour2 = Shart.objects.filter(user=user).extra(select={
-        #         'hour': "EXTRACT(hour FROM date)"}).values('user', 'hour')
-        #     for hour in by_hour2:
-        #         print hour
 
         stats_serializer = ShartStatsSerialiser(data={
             'by_hour': by_hours,
