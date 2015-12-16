@@ -32,8 +32,8 @@ export default class Shart extends React.Component {
 
   render() {
     var ByHourChart = {
-      data: [['id', 'Hour', 'Count', 'Color', 'Count']],
-      chartType: 'BarChart',
+      data: null,
+      chartType: 'ColumnChart',
       options: {
         hAxis: {
           title: 'Hour',
@@ -47,16 +47,16 @@ export default class Shart extends React.Component {
           duration: 2000,
           easing: 'out'
         }
-      },
-      chartType: 'BubbleChart'
+      }
     };
     if (this.state.stats.by_hour) {
-      var by_hour = this.state.stats.by_hour;
-      for(var date in by_hour) {
-        by_hour[date].data.forEach((data) => {
-          ByHourChart.data.push([data.user.substring(0, 2), new Date(data.date), data.count, data.user, data.count]);
-        });
-      }
+      ByHourChart.data = this.state.stats.by_hour;
+      // var by_hour = this.state.stats.by_hour;
+      // for(var date in by_hour) {
+      //   by_hour[date].data.forEach((data) => {
+      //     ByHourChart.data.push([data.user.substring(0, 2), new Date(data.date), data.count, data.user, data.count]);
+      //   });
+      // }
     }
 
     return (

@@ -64,41 +64,92 @@ class ShartViewSet (viewsets.ModelViewSet):
         users = User.objects.all()
 
         cursor = connection.cursor()
-
-        cursor.execute('SELECT to_char(date, \'YYYY-MM-DD HH24:00:00 TZ\' ) AS dates, \
+        cursor.execute('SELECT EXTRACT(hour FROM date) AS hour, \
                         COUNT(user_id), user_id \
                         FROM app_shart \
-                        GROUP BY dates, user_id')
-        by_hour = self.dictfetchall(cursor)
+                        GROUP BY hour, user_id')
+        user_hours = self.dictfetchall(cursor)
 
-        by_hours = {}
-        for hour in by_hour:
-            dates = hour['dates']
-            user = users.get(pk=hour['user_id']).username
-            if dates not in by_hours:
-                by_hours[dates] = {
-                    'data': []
-                }
+        hours = []
+        labels = ['Hour']
+        for user in user_hours:
+            username = users.get(pk=user['user_id']).username
+            if username not in labels:
+                labels.append(username)
 
-            by_hours[dates]['data'].append({
-                'user': user,
-                'date': hour['dates'],
-                'count': hour['count']
-                })
+        for hour in range(1, 24):
+            for_user_hours = [0] * len(labels)
+            for_user_hours[0] = str(hour)
+            print for_user_hours
 
-        cursor.execute('SELECT EXTRACT(DOW FROM date) AS day, \
-                        COUNT(user_id), user_id \
-                        FROM app_shart \
-                        GROUP BY user_id, day')
-        by_day = self.dictfetchall(cursor)
+            for user in user_hours:
+                username = users.get(pk=user['user_id']).username
+                if hour == user['hour']:
+                    print username
+                    print labels.index(username)
+                    for_user_hours[labels.index(username)] = int(user['count'])
 
-        for i, day in enumerate(by_day):
-            by_day[i]['user'] = users.get(pk=day['user_id']).username
-            by_day[i]['day'] = int(day['day'])
+            hours.append(for_user_hours)
+        hours.insert(0, labels)
+
+        # hours = []
+        # labels = ['Hour']
+        # for hour in range(1, 24):
+        #     labels.append(str(hour))
+        # hours.append(labels)
+
+        # for user in users:
+        #     cursor.execute('SELECT EXTRACT(hour FROM date) AS hour, \
+        #                     COUNT(user_id), user_id \
+        #                     FROM app_shart \
+        #                     WHERE user_id = {0} \
+        #                     GROUP BY hour, user_id'.format(user.id))
+        #     user_hours = self.dictfetchall(cursor)
+
+        #     if len(user_hours) == 0:
+        #         continue
+
+        #     for_user_hours = [user.username, ]
+        #     for hour in range(1, 24):
+        #         appended = False
+        #         for user_hour in user_hours:
+        #             if user_hour['hour'] == hour:
+        #                 for_user_hours.append(int(user_hour['count']))
+        #                 appended = True
+
+        #         if not appended:
+        #             for_user_hours.append(0)
+
+        #     hours.append(for_user_hours)
+
+        # by_hours = {}
+        # for hour in by_hour:
+        #     dates = hour['dates']
+        #     user = users.get(pk=hour['user_id']).username
+        #     if dates not in by_hours:
+        #         by_hours[dates] = {
+        #             'data': []
+        #         }
+
+        #     by_hours[dates]['data'].append({
+        #         'user': user,
+        #         'date': hour['dates'],
+        #         'count': hour['count']
+        #         })
+
+        # cursor.execute('SELECT EXTRACT(DOW FROM date) AS day, \
+        #                 COUNT(user_id), user_id \
+        #                 FROM app_shart \
+        #                 GROUP BY user_id, day')
+        # by_day = self.dictfetchall(cursor)
+
+        # for i, day in enumerate(by_day):
+        #     by_day[i]['user'] = users.get(pk=day['user_id']).username
+        #     by_day[i]['day'] = int(day['day'])
 
         stats_serializer = ShartStatsSerialiser(data={
-            'by_hour': by_hours,
-            'by_day': by_day
+            'by_hour': hours,
+            'by_day': []
             })
 
         if stats_serializer.is_valid():

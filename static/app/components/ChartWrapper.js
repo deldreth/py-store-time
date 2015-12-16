@@ -32,8 +32,8 @@ export default class ChartWrapper extends React.Component {
           document.getElementById(this.props.graphName)
         );
         break;
-      case 'BarChart':
-        chart = new google.visualization.BarChart(
+      case 'ColumnChart':
+        chart = new google.visualization.ColumnChart(
           document.getElementById(this.props.graphName)
         );
         break;
