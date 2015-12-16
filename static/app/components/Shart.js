@@ -47,8 +47,13 @@ export default class Shart extends React.Component {
         title: 'Sharts by Hour of Day',
         hAxis: {
           title: 'Hour',
-          slantedText: true,
-          slantedTextAngle: 45
+          viewWindowMode:'explicit',
+          viewWindow:{
+            max: 22,
+            min: 7
+          },
+          minValue: '8',
+          maxValue: '10PM'
         },
         vAxis: {title: 'Count'},
         animation: {
