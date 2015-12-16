@@ -11,7 +11,7 @@ from .models import Queue, History, Shart
 from .serializers import (
     QueueSerializer, HistorySerializer, StatsSerializer, ShartSerializer, ShartStatsSerialiser)
 
-import datetime
+from datetime import datetime
 import time
 
 
@@ -79,7 +79,8 @@ class ShartViewSet (viewsets.ModelViewSet):
 
         for hour in range(1, 24):
             for_user_hours = [0] * len(labels)
-            for_user_hours[0] = str(hour)
+            hour_label = datetime.strptime(str(hour) + ':00', "%H:%M")
+            for_user_hours[0] = hour_label.strftime("%-I%p")
 
             for user in user_hours:
                 username = users.get(pk=user['user_id']).username
@@ -97,6 +98,7 @@ class ShartViewSet (viewsets.ModelViewSet):
 
         days = []
         labels = ['Day']
+        dow = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         for user in user_hours:
             username = users.get(pk=user['user_id']).username
             if username not in labels:
@@ -104,7 +106,7 @@ class ShartViewSet (viewsets.ModelViewSet):
 
         for day in range(0, 7):
             for_user_days = [0] * len(labels)
-            for_user_days[0] = str(day)
+            for_user_days[0] = dow[day]
 
             for user in user_days:
                 username = users.get(pk=user['user_id']).username

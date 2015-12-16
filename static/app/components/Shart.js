@@ -4,6 +4,14 @@ import { Row, Col } from 'react-bootstrap';
 
 const Paper = require('material-ui/lib/paper');
 
+const Card = require('material-ui/lib/card/card');
+const CardActions = require('material-ui/lib/card/card-actions');
+const CardExpandable = require('material-ui/lib/card/card-expandable');
+const CardHeader = require('material-ui/lib/card/card-header');
+const CardMedia = require('material-ui/lib/card/card-media');
+const CardText = require('material-ui/lib/card/card-text');
+const CardTitle = require('material-ui/lib/card/card-title');
+
 const ChartWrapper = require('./ChartWrapper');
 const ShartStore = require('../stores/ShartStore');
 
@@ -38,11 +46,10 @@ export default class Shart extends React.Component {
       options: {
         hAxis: {
           title: 'Hour',
+          slantedText: true,
+          slantedTextAngle: 45
         },
         vAxis: {title: 'Count'},
-        bubble: {
-          fontSize: 11
-        },
         animation: {
           startup: true,
           duration: 2000,
@@ -88,15 +95,20 @@ export default class Shart extends React.Component {
         </Row>
         <Row>
           <Col md={12}>
-            <Paper>
-              <ChartWrapper
-                width={'100%'}
-                height={"300px"}
-                data={ByHourChart.data}
-                options={ByHourChart.options}
-                graphName='by-hour'
-                chartType={ByHourChart.chartType}/>
-            </Paper>
+            <Card>
+              <CardText>
+                <h3>Sharts by Hour of Day</h3>
+              </CardText>
+              <CardMedia>
+                <ChartWrapper
+                  width={'100%'}
+                  height={"300px"}
+                  data={ByHourChart.data}
+                  options={ByHourChart.options}
+                  graphName='by-hour'
+                  chartType={ByHourChart.chartType}/>
+              </CardMedia>
+            </Card>
           </Col>
         </Row>
 
@@ -104,15 +116,20 @@ export default class Shart extends React.Component {
 
         <Row>
           <Col md={12}>
-            <Paper>
-              <ChartWrapper
-                width={'100%'}
-                height={"300px"}
-                data={ByDayChart.data}
-                options={ByDayChart.options}
-                graphName='by-day'
-                chartType={ByDayChart.chartType}/>
-            </Paper>
+            <Card>
+              <CardText>
+                <h3>Sharts by Day of Week</h3>
+              </CardText>
+              <CardMedia>
+                <ChartWrapper
+                  width={'100%'}
+                  height={"300px"}
+                  data={ByDayChart.data}
+                  options={ByDayChart.options}
+                  graphName='by-day'
+                  chartType={ByDayChart.chartType}/>
+              </CardMedia>
+            </Card>
           </Col>
         </Row>
       </div>
