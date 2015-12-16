@@ -92,64 +92,34 @@ class ShartViewSet (viewsets.ModelViewSet):
             hours.append(for_user_hours)
         hours.insert(0, labels)
 
-        # hours = []
-        # labels = ['Hour']
-        # for hour in range(1, 24):
-        #     labels.append(str(hour))
-        # hours.append(labels)
+        cursor.execute('SELECT EXTRACT(DOW FROM date AT TIME ZONE \'EST\') AS day, \
+                COUNT(user_id), user_id \
+                FROM app_shart \
+                GROUP BY day, user_id')
+        user_days = self.dictfetchall(cursor)
 
-        # for user in users:
-        #     cursor.execute('SELECT EXTRACT(hour FROM date) AS hour, \
-        #                     COUNT(user_id), user_id \
-        #                     FROM app_shart \
-        #                     WHERE user_id = {0} \
-        #                     GROUP BY hour, user_id'.format(user.id))
-        #     user_hours = self.dictfetchall(cursor)
+        days = []
+        labels = ['Day']
+        for user in user_hours:
+            username = users.get(pk=user['user_id']).username
+            if username not in labels:
+                labels.append(username)
 
-        #     if len(user_hours) == 0:
-        #         continue
+        for day in range(1, 8):
+            for_user_days = [0] * len(labels)
+            for_user_days[0] = str(day)
 
-        #     for_user_hours = [user.username, ]
-        #     for hour in range(1, 24):
-        #         appended = False
-        #         for user_hour in user_hours:
-        #             if user_hour['hour'] == hour:
-        #                 for_user_hours.append(int(user_hour['count']))
-        #                 appended = True
+            for user in user_days:
+                username = users.get(pk=user['user_id']).username
+                if day == user['day']:
+                    for_user_days[labels.index(username)] = int(user['count'])
 
-        #         if not appended:
-        #             for_user_hours.append(0)
-
-        #     hours.append(for_user_hours)
-
-        # by_hours = {}
-        # for hour in by_hour:
-        #     dates = hour['dates']
-        #     user = users.get(pk=hour['user_id']).username
-        #     if dates not in by_hours:
-        #         by_hours[dates] = {
-        #             'data': []
-        #         }
-
-        #     by_hours[dates]['data'].append({
-        #         'user': user,
-        #         'date': hour['dates'],
-        #         'count': hour['count']
-        #         })
-
-        # cursor.execute('SELECT EXTRACT(DOW FROM date) AS day, \
-        #                 COUNT(user_id), user_id \
-        #                 FROM app_shart \
-        #                 GROUP BY user_id, day')
-        # by_day = self.dictfetchall(cursor)
-
-        # for i, day in enumerate(by_day):
-        #     by_day[i]['user'] = users.get(pk=day['user_id']).username
-        #     by_day[i]['day'] = int(day['day'])
+            days.append(for_user_days)
+        days.insert(0, labels)
 
         stats_serializer = ShartStatsSerialiser(data={
             'by_hour': hours,
-            'by_day': []
+            'by_day': days
             })
 
         if stats_serializer.is_valid():

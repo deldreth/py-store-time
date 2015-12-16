@@ -51,15 +51,32 @@ export default class Shart extends React.Component {
     };
     if (this.state.stats.by_hour) {
       ByHourChart.data = this.state.stats.by_hour;
-      // var by_hour = this.state.stats.by_hour;
-      // for(var date in by_hour) {
-      //   by_hour[date].data.forEach((data) => {
-      //     ByHourChart.data.push([data.user.substring(0, 2), new Date(data.date), data.count, data.user, data.count]);
-      //   });
-      // }
+    }
+
+    var ByDayChart = {
+      data: null,
+      chartType: 'ColumnChart',
+      options: {
+        hAxis: {
+          title: 'Day of Week',
+        },
+        vAxis: {title: 'Count'},
+        bubble: {
+          fontSize: 11
+        },
+        animation: {
+          startup: true,
+          duration: 2000,
+          easing: 'out'
+        }
+      }
+    };
+    if (this.state.stats.by_day) {
+      ByDayChart.data = this.state.stats.by_day;
     }
 
     return (
+      <div>
         <ChartWrapper
           width={'100%'}
           height={"300px"}
@@ -67,6 +84,15 @@ export default class Shart extends React.Component {
           options={ByHourChart.options}
           graphName='by-hour'
           chartType={ByHourChart.chartType}/>
+
+        <ChartWrapper
+          width={'100%'}
+          height={"300px"}
+          data={ByDayChart.data}
+          options={ByDayChart.options}
+          graphName='by-day'
+          chartType={ByDayChart.chartType}/>
+      </div>
     );
   }
 
