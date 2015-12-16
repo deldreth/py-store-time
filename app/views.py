@@ -64,7 +64,7 @@ class ShartViewSet (viewsets.ModelViewSet):
         users = User.objects.all()
 
         cursor = connection.cursor()
-        cursor.execute('SELECT EXTRACT(hour FROM date) AS hour, \
+        cursor.execute('SELECT EXTRACT(hour FROM date AT TIME ZONE \'EST\') AS hour, \
                         COUNT(user_id), user_id \
                         FROM app_shart \
                         GROUP BY hour, user_id')
