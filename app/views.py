@@ -9,10 +9,14 @@ from rest_framework.decorators import list_route
 
 from .models import Queue, History, Shart
 from .serializers import (
-    QueueSerializer, HistorySerializer, StatsSerializer, ShartSerializer, ShartStatsSerialiser)
+    QueueSerializer,
+    HistorySerializer,
+    StatsSerializer,
+    ShartSerializer,
+    ShartStatsSerialiser)
 
 from datetime import datetime
-import time
+import requests
 
 
 class QueueViewSet (viewsets.ModelViewSet):
@@ -46,6 +50,9 @@ class ShartViewSet (viewsets.ModelViewSet):
             pk=request.POST['user']))
 
         if created:
+            text = 'Dang. {0} just let one rip.'.format(created.user.username)
+            r = requests.post('https://hooks.slack.com/services/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',
+                              json={'text': text})
             return Response(ShartSerializer(created).data,
                             status.HTTP_201_CREATED)
 
