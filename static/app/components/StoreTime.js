@@ -77,7 +77,7 @@ class StoreTime extends React.Component {
 
         <div className='container'>
           <Row>
-            <Col md={10} mdOffset={1}>
+            <Col md={12}>
               {context}
             </Col>
           </Row>

@@ -44,6 +44,7 @@ export default class Shart extends React.Component {
       data: null,
       chartType: 'ColumnChart',
       options: {
+        title: 'Sharts by Hour of Day',
         hAxis: {
           title: 'Hour',
           slantedText: true,
@@ -65,6 +66,7 @@ export default class Shart extends React.Component {
       data: null,
       chartType: 'ColumnChart',
       options: {
+        title: 'Sharts by Day of Week',
         hAxis: {
           title: 'Day of Week',
         },
@@ -96,9 +98,6 @@ export default class Shart extends React.Component {
         <Row>
           <Col md={12}>
             <Card>
-              <CardText>
-                <h3>Sharts by Hour of Day</h3>
-              </CardText>
               <CardMedia>
                 <ChartWrapper
                   width={'100%'}
@@ -117,9 +116,6 @@ export default class Shart extends React.Component {
         <Row>
           <Col md={12}>
             <Card>
-              <CardText>
-                <h3>Sharts by Day of Week</h3>
-              </CardText>
               <CardMedia>
                 <ChartWrapper
                   width={'100%'}
