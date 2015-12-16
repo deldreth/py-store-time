@@ -105,7 +105,7 @@ class ShartViewSet (viewsets.ModelViewSet):
             if username not in labels:
                 labels.append(username)
 
-        for day in range(1, 8):
+        for day in range(0, 7):
             for_user_days = [0] * len(labels)
             for_user_days[0] = str(day)
 
