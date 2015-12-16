@@ -80,13 +80,10 @@ class ShartViewSet (viewsets.ModelViewSet):
         for hour in range(1, 24):
             for_user_hours = [0] * len(labels)
             for_user_hours[0] = str(hour)
-            print for_user_hours
 
             for user in user_hours:
                 username = users.get(pk=user['user_id']).username
                 if hour == user['hour']:
-                    print username
-                    print labels.index(username)
                     for_user_hours[labels.index(username)] = int(user['count'])
 
             hours.append(for_user_hours)

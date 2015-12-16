@@ -24,8 +24,6 @@ export default class ChartWrapper extends React.Component {
     var options = this.props.options;
     var chart = null;
 
-    console.log(this.props.chartType);
-
     switch (this.props.chartType) {
       case 'BubbleChart':
         chart = new google.visualization.BubbleChart(
