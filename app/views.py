@@ -16,6 +16,7 @@ from .serializers import (
     ShartStatsSerialiser)
 
 from datetime import datetime
+from random import randint
 import requests
 
 
@@ -50,7 +51,16 @@ class ShartViewSet (viewsets.ModelViewSet):
             pk=request.POST['user']))
 
         if created:
-            text = 'Dang. {0} just let one rip.'.format(created.user.username)
+            options = [
+                'Dang. {0} just let one rip.',
+                'There may be something wrong with {0}\'s insides.',
+                'Someone open a window. {0} is fumigating.',
+                '{0} may have just shat themselves.',
+                '{0} has apparently never heard of Beano.',
+                'Noxious gas alert in the vicinity of {0}.'
+            ]
+
+            text = options[randint(0, len(options) - 1)].format(created.user.username)
             r = requests.post('https://hooks.slack.com/services/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',
                               json={'text': text})
             return Response(ShartSerializer(created).data,
