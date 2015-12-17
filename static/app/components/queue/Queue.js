@@ -81,7 +81,6 @@ class Queue extends React.Component {
               rightIconButton={
                 <IconButton
                   color={Colors.lime900}
-                  tooltip='+1 Shart. Shoo.'
                   iconClassName="material-icons"
                   onTouchTap={this._sharted.bind(this, queue.user.id)}>
                   cloud_queue
