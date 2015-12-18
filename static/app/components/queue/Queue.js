@@ -73,6 +73,12 @@ class Queue extends React.Component {
           });
         }
 
+        var avatar = <Avatar>{queue.user.username.substring(0, 2)}</Avatar>
+        if (queue.avatar !== null) {
+          var gravatar = 'http://www.gravatar.com/avatar/' + queue.avatar;
+          avatar = <Avatar src={gravatar} />
+        }
+
         return (
           <div key={queue.user.id}>
             <Card>
@@ -84,7 +90,7 @@ class Queue extends React.Component {
                     <span style={{color: Colors.lime900}}>{sharts} sharts, {sharts_today} today</span>
                   </p>
                 }
-                avatar={<Avatar>{queue.user.username.substring(0,2)}</Avatar>}
+                avatar={avatar}
                 actAsExpander={true}
                 showExpandableButton={true}/>
               <CardActions>

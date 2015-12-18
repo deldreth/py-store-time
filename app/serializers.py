@@ -17,7 +17,7 @@ class QueueSerializer (serializers.ModelSerializer):
 
     class Meta:
         model = Queue
-        fields = ('id', 'user', 'last_date')
+        fields = ('id', 'user', 'last_date', 'avatar')
 
 
 class HistorySerializer (serializers.ModelSerializer):

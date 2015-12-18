@@ -16,6 +16,9 @@ const RaisedButton = require('material-ui/lib/raised-button');
 const List = require('material-ui/lib/lists/list');
 const ListItem = require('material-ui/lib/lists/list-item');
 
+const Tabs = require('material-ui/lib/tabs/tabs');
+const Tab = require('material-ui/lib/tabs/tab');
+
 const Table = require('material-ui/lib/table/table');
 const TableBody = require('material-ui/lib/table/table-body');
 const TableFooter = require('material-ui/lib/table/table-footer');
@@ -87,7 +90,7 @@ class User extends React.Component {
 
       context = (
         <Row>
-          <Col md={8}>
+          <Col md={12}>
             <Card initiallyExpanded={true}>
               <CardHeader
                 title={this.state.queue.user.username}
@@ -102,35 +105,34 @@ class User extends React.Component {
                   onTouchTap={this._pay.bind(this, this.state.queue)}/>
               </CardActions>
               <CardText>
-                <Table>
-                  <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                    <TableRow>
-                      <TableHeaderColumn colSpan="3" tooltip='Dem histories' style={{textAlign: 'center'}}>
-                        Dat History
-                      </TableHeaderColumn>
-                    </TableRow>
-                    <TableRow>
-                      <TableHeaderColumn>Date</TableHeaderColumn>
-                      <TableHeaderColumn>Time</TableHeaderColumn>
-                      <TableHeaderColumn>Amount</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={false}>
-                    {history}
-                  </TableBody>
-                </Table>
+                <Tabs>
+                  <Tab label="Payment History" value="a" >
+                    <Table>
+                      <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                        <TableRow>
+                          <TableHeaderColumn colSpan="3" tooltip='Dem histories' style={{textAlign: 'center'}}>
+                            Dat History
+                          </TableHeaderColumn>
+                        </TableRow>
+                        <TableRow>
+                          <TableHeaderColumn>Date</TableHeaderColumn>
+                          <TableHeaderColumn>Time</TableHeaderColumn>
+                          <TableHeaderColumn>Amount</TableHeaderColumn>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody displayRowCheckbox={false}>
+                        {history}
+                      </TableBody>
+                    </Table>
+                  </Tab>
+                  <Tab label="Sharts" value="b">
+                    Something is coming...
+                  </Tab>
+                </Tabs>
               </CardText>
             </Card>
 
             <Payment display={this.state.payment_display} queue={this.state.payment_queue} handlePayment={this._handlePayment.bind(this)} />
-          </Col>
-          <Col md={4}>
-            <Card initiallyExpanded={true}>
-              <CardText>
-                <h5>Shart Stats</h5>
-                Stats
-              </CardText>
-            </Card>
           </Col>
         </Row>
       );

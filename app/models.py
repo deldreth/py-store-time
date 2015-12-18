@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 import datetime
+import hashlib
 
 
 class UserTimestamp (models.Model):
@@ -19,6 +20,13 @@ class Queue (models.Model):
 
     class Meta:
         ordering = ['last_date']
+
+    @property
+    def avatar(self):
+        if self.user.email:
+            return hashlib.md5(self.user.email).hexdigest()
+
+        return None
 
 
 class History (UserTimestamp):
