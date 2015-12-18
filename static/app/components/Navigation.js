@@ -1,4 +1,5 @@
 var React = require('react');
+var md5 = require('md5');
 const AppBar = require('material-ui/lib/app-bar');
 const LeftNav = require('material-ui/lib/left-nav');
 const MenuItem = require('material-ui/lib/menu/menu-item');
@@ -6,6 +7,7 @@ const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const LinearProgress = require('material-ui/lib/linear-progress');
 const FontIcon = require('material-ui/lib/font-icon');
 const FloatingActionButton = require('material-ui/lib/floating-action-button');
+const Avatar = require('material-ui/lib/avatar');
 let Colors = require('material-ui/lib/styles/colors');
 const MyRawTheme = require('../theme');
 
@@ -46,6 +48,14 @@ class Navigation extends React.Component {
   }
 
   render () {
+    if (this.props.user) {
+      var avatar = <Avatar>{this.props.user.username.substring(0, 2)}</Avatar>
+      if (this.props.user.email !== '') {
+        var gravatar = 'http://www.gravatar.com/avatar/' + md5(this.props.user.email);
+        avatar = <Avatar src={gravatar} />
+      }
+    }
+
     return (
       <div>
         <LeftNav
@@ -55,7 +65,7 @@ class Navigation extends React.Component {
           onChange={this._onNavChange}/>
 
         <AppBar
-          title="Store Time"
+          title={<span>{avatar} Store Time</span>}
           onLeftIconButtonTouchTap={this.showNavigation}
           iconElementRight={
             <FloatingActionButton mini={true}>
