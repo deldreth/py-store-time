@@ -36,7 +36,7 @@ export default class Payment extends React.Component {
         actionFocus="submit"
         actions={this.actions}
         open={this.props.display}
-        onRequestClose={this.hide}>
+        onRequestClose={this.props.handlePayment}>
         <form ref='paymentForm'>
           <TextField
             name='amount'
