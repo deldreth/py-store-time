@@ -5,10 +5,10 @@ let Spacing = require('material-ui/lib/styles/spacing');
 module.exports = {
   spacing: Spacing,
   palette: {
-    primary1Color: Colors.green500,
+    primary1Color: Colors.teal300,
     primary2Color: Colors.cyan700,
     primary3Color: Colors.lightBlack,
-    accent1Color: Colors.orange500,
+    accent1Color: Colors.orangeA200,
     accent2Color: Colors.grey100,
     accent3Color: Colors.grey500,
     textColor: Colors.darkBlack,

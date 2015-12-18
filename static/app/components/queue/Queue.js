@@ -9,22 +9,14 @@ const CircularProgress = require('material-ui/lib/circular-progress');
 
 const Card = require('material-ui/lib/card/card');
 const CardActions = require('material-ui/lib/card/card-actions');
-const CardExpandable = require('material-ui/lib/card/card-expandable');
 const CardHeader = require('material-ui/lib/card/card-header');
-const CardMedia = require('material-ui/lib/card/card-media');
-const CardText = require('material-ui/lib/card/card-text');
 const CardTitle = require('material-ui/lib/card/card-title');
+const CardExpandable = require('material-ui/lib/card/card-expandable');
+const CardText = require('material-ui/lib/card/card-text');
 
-const List = require('material-ui/lib/lists/list');
-const ListDivider = require('material-ui/lib/lists/list-divider');
-const ListItem = require('material-ui/lib/lists/list-item');
-const Paper = require('material-ui/lib/paper');
 const Avatar = require('material-ui/lib/avatar');
 const RaisedButton = require('material-ui/lib/raised-button');
 const FlatButton = require('material-ui/lib/flat-button');
-const FontIcon = require('material-ui/lib/font-icon');
-const IconButton = require('material-ui/lib/icon-button');
-const FloatingActionButton = require('material-ui/lib/floating-action-button');
 
 const QueueActions = require('../../actions/QueueActions');
 const QueueStore = require('../../stores/QueueStore');
@@ -39,7 +31,6 @@ class Queue extends React.Component {
     super();
     this._onChange = this._onChange.bind(this);
     this._listItemTouch = this._listItemTouch.bind(this);
-    this._sharted = this._sharted.bind(this);
     this._pay = this._pay.bind(this);
     this._handlePayment = this._handlePayment.bind(this);
 
@@ -93,7 +84,9 @@ class Queue extends React.Component {
                     <span style={{color: Colors.lime900}}>{sharts} sharts, {sharts_today} today</span>
                   </p>
                 }
-                avatar={<Avatar>{queue.user.username.substring(0,2)}</Avatar>}/>
+                avatar={<Avatar>{queue.user.username.substring(0,2)}</Avatar>}
+                actAsExpander={true}
+                showExpandableButton={true}/>
               <CardActions>
                 <RaisedButton
                   primary={true}
@@ -101,9 +94,11 @@ class Queue extends React.Component {
                   labelPosition='after'
                   onTouchTap={this._pay.bind(this, queue)}>
                 </RaisedButton>
-                <RaisedButton label='Shart' onTouchTap={this._sharted.bind(this, queue.user.id)}/>
                 <FlatButton label='History' secondary={true} onTouchTap={this._listItemTouch.bind(this, queue.user.id)}/>
               </CardActions>
+              <CardText expandable={true}>
+                Something is coming...
+              </CardText>
             </Card>
             <br/>
           </div>
@@ -137,12 +132,6 @@ class Queue extends React.Component {
 
   _listItemTouch (id) {
     this.props.history.pushState('user', '/user/' + id);
-  }
-
-  _sharted (id) {
-    ShartActions.create({
-      user: id
-    });
   }
 
   _onChange () {

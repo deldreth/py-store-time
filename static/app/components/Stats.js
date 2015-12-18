@@ -10,6 +10,7 @@ export default class Stats extends React.Component {
   constructor () {
     super();
     this._onChange = this._onChange.bind(this);
+    this._listItemTouch = this._listItemTouch.bind(this);
 
     this.state = this.getState();
     HistoryStore.addChangeListener(this._onChange);
@@ -35,7 +36,8 @@ export default class Stats extends React.Component {
             key={sum.user}
             leftAvatar={<Avatar>{sum.user.substring(0,2)}</Avatar>}
             primaryText={sum.user}
-            secondaryText={'$' + sum.amount__sum}>
+            secondaryText={'$' + sum.amount__sum}
+            onTouchTap={this._listItemTouch.bind(this, sum.user_id)}>
           </ListItem>
         );
       });
@@ -46,29 +48,38 @@ export default class Stats extends React.Component {
             key={avg.user}
             leftAvatar={<Avatar>{avg.user.substring(0,2)}</Avatar>}
             primaryText={avg.user}
-            secondaryText={'$' + parseFloat(avg.amount__avg).toFixed(2)}>
+            secondaryText={'$' + parseFloat(avg.amount__avg).toFixed(2)}
+            onTouchTap={this._listItemTouch.bind(this, avg.user_id)}>
           </ListItem>
         );
       });
     }
 
     return (
-      <div>
-        <br/>
-        <Paper zDepth={3}>
-          <List subheader='Big Spenders (since forever)'>
-            {sums}
-          </List>
-        </Paper>
+      <Row>
+        <Col md={6}>
+          <h3>Big Spenders (since forever)</h3>
+          <Paper>
+            <List>
+              {sums}
+            </List>
+          </Paper>
+        </Col>
 
-        <br/>
-        <Paper zDepth={3}>
-          <List subheader='Average Paid by User'>
-            {avgs}
-          </List>
-        </Paper>
-      </div>
+        <Col md={6}>
+          <h3>Average Paid by User</h3>
+          <Paper>
+            <List>
+              {avgs}
+            </List>
+          </Paper>
+        </Col>
+      </Row>
     );
+  }
+
+  _listItemTouch (id) {
+    this.props.history.pushState('user', '/user/' + id);
   }
 
   _onChange () {
