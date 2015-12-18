@@ -13,8 +13,6 @@ export default class Payment extends React.Component {
   constructor(props) {
     super(props);
 
-    this.hide = this.hide.bind(this);
-    this.show = this.show.bind(this);
     this._logOnly = this._logOnly.bind(this);
     this._logPayment = this._logPayment.bind(this);
 
@@ -28,25 +26,7 @@ export default class Payment extends React.Component {
 
   getState () {
     return {
-      display: this.props.display,
-      queue: QueueStore.getQueue().filter((object) => {
-        return object.user.id == this.props.user;
-      })[0],
     };
-  }
-
-  show () {
-    this.setState({display: true});
-  }
-
-  hide () {
-    this.setState({display: false});
-  }
-
-  componentDidUpdate () {
-    if (this.state.display) {
-      // this.refs.amountTextField.focus();
-    }
   }
 
   render() {
@@ -55,7 +35,7 @@ export default class Payment extends React.Component {
         title="Very nice. How much?"
         actionFocus="submit"
         actions={this.actions}
-        open={this.state.display}
+        open={this.props.display}
         onRequestClose={this.hide}>
         <form ref='paymentForm'>
           <TextField
@@ -71,12 +51,12 @@ export default class Payment extends React.Component {
   }
 
   _logOnly () {
-    QueueActions.update(this.state.queue);
+    QueueActions.update(this.props.queue);
     HistoryActions.create({
-      queue: this.state.queue,
+      queue: this.props.queue,
       amount: 0
     });
-    this.hide();
+    this.props.handlePayment();
   }
 
   _logPayment () {
@@ -86,11 +66,11 @@ export default class Payment extends React.Component {
       formObject[input.name] = input.value;
     });
 
-    QueueActions.update(this.state.queue);
+    QueueActions.update(this.props.queue);
     HistoryActions.create({
-      queue: this.state.queue,
+      queue: this.props.queue,
       amount: formObject.amount
     });
-    this.hide();
+    this.props.handlePayment();
   }
 }

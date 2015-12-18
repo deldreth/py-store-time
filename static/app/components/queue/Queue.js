@@ -7,19 +7,31 @@ let Colors = require('material-ui/lib/styles/colors');
 
 const CircularProgress = require('material-ui/lib/circular-progress');
 
+const Card = require('material-ui/lib/card/card');
+const CardActions = require('material-ui/lib/card/card-actions');
+const CardExpandable = require('material-ui/lib/card/card-expandable');
+const CardHeader = require('material-ui/lib/card/card-header');
+const CardMedia = require('material-ui/lib/card/card-media');
+const CardText = require('material-ui/lib/card/card-text');
+const CardTitle = require('material-ui/lib/card/card-title');
+
 const List = require('material-ui/lib/lists/list');
 const ListDivider = require('material-ui/lib/lists/list-divider');
 const ListItem = require('material-ui/lib/lists/list-item');
 const Paper = require('material-ui/lib/paper');
 const Avatar = require('material-ui/lib/avatar');
 const RaisedButton = require('material-ui/lib/raised-button');
+const FlatButton = require('material-ui/lib/flat-button');
 const FontIcon = require('material-ui/lib/font-icon');
 const IconButton = require('material-ui/lib/icon-button');
+const FloatingActionButton = require('material-ui/lib/floating-action-button');
 
 const QueueActions = require('../../actions/QueueActions');
 const QueueStore = require('../../stores/QueueStore');
 const ShartActions = require('../../actions/ShartActions');
 const ShartStore = require('../../stores/ShartStore');
+
+import Payment from '../Payment';
 
 
 class Queue extends React.Component {
@@ -28,6 +40,8 @@ class Queue extends React.Component {
     this._onChange = this._onChange.bind(this);
     this._listItemTouch = this._listItemTouch.bind(this);
     this._sharted = this._sharted.bind(this);
+    this._pay = this._pay.bind(this);
+    this._handlePayment = this._handlePayment.bind(this);
 
     this.state = this.getState();
     QueueStore.addChangeListener(this._onChange);
@@ -37,7 +51,9 @@ class Queue extends React.Component {
   getState () {
     return {
       queue: QueueStore.getQueue(),
-      sharts: ShartStore.getSharts()
+      sharts: ShartStore.getSharts(),
+      payment_display: false,
+      payment_queue: null
     };
   }
 
@@ -67,41 +83,56 @@ class Queue extends React.Component {
         }
 
         return (
-            <ListItem
-              key={queue.user.id}
-              leftAvatar={<Avatar>{queue.user.username.substring(0,2)}</Avatar>}
-              primaryText={queue.user.username}
-              secondaryText={
-                <p>
-                  {queue.last_date}<br/>
-                  <span style={{color: Colors.lime900}}>{sharts} sharts, {sharts_today} today</span>
-                </p>
-              }
-              secondaryTextLines={2}
-              rightIconButton={
-                <IconButton
-                  color={Colors.lime900}
-                  iconClassName="material-icons"
-                  onTouchTap={this._sharted.bind(this, queue.user.id)}>
-                  cloud_queue
-                </IconButton>
-              }
-              onTouchTap={this._listItemTouch.bind(this, queue.user.id)}>
-            </ListItem>
+          <div key={queue.user.id}>
+            <Card>
+              <CardHeader
+                title={queue.user.username}
+                subtitle={
+                  <p>
+                    {queue.last_date}<br/>
+                    <span style={{color: Colors.lime900}}>{sharts} sharts, {sharts_today} today</span>
+                  </p>
+                }
+                avatar={<Avatar>{queue.user.username.substring(0,2)}</Avatar>}/>
+              <CardActions>
+                <RaisedButton
+                  primary={true}
+                  label='Pay'
+                  labelPosition='after'
+                  onTouchTap={this._pay.bind(this, queue)}>
+                </RaisedButton>
+                <RaisedButton label='Shart' onTouchTap={this._sharted.bind(this, queue.user.id)}/>
+                <FlatButton label='History' secondary={true} onTouchTap={this._listItemTouch.bind(this, queue.user.id)}/>
+              </CardActions>
+            </Card>
+            <br/>
+          </div>
         );
       });
     }
 
     return (
       <div>
-        <br/>
-        <Paper zDepth={3}>
-          <List subheader='The Almighty Queue'>
-            {queues}
-          </List>
-        </Paper>
+        <h1>The Almighty Queue</h1>
+        {queues}
+
+        <Payment display={this.state.payment_display} queue={this.state.payment_queue} handlePayment={this._handlePayment.bind(this)} />
       </div>
     );
+  }
+
+  _pay (queue) {
+    this.setState({
+      payment_display: true,
+      payment_queue: queue
+    });
+  }
+
+  _handlePayment () {
+    this.setState({
+      payment_display: false,
+      payment_queue: null
+    });
   }
 
   _listItemTouch (id) {

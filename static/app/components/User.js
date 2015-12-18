@@ -23,6 +23,7 @@ const TableHeader = require('material-ui/lib/table/table-header');
 const TableHeaderColumn = require('material-ui/lib/table/table-header-column');
 const TableRow = require('material-ui/lib/table/table-row');
 const TableRowColumn = require('material-ui/lib/table/table-row-column');
+const Paper = require('material-ui/lib/paper');
 
 const QueueActions = require('../actions/QueueActions');
 const QueueStore = require('../stores/QueueStore');
@@ -36,6 +37,7 @@ class User extends React.Component {
     super();
     this._onChange = this._onChange.bind(this);
     this._pay = this._pay.bind(this);
+    this._handlePayment = this._handlePayment.bind(this);
 
     this.state = null;
     QueueStore.addChangeListener(this._onChange);
@@ -48,7 +50,9 @@ class User extends React.Component {
       queue: QueueStore.getQueue().filter((object) => {
         return object.user.id == this.props.params.userId;
       })[0],
-      history: HistoryStore.getHistory()
+      history: HistoryStore.getHistory(),
+      payment_display: false,
+      payment_queue: null
     };
   }
 
@@ -82,43 +86,53 @@ class User extends React.Component {
       });
 
       context = (
-        <div>
-          <Card initiallyExpanded={true}>
-            <CardHeader
-              title={this.state.queue.user.username}
-              subtitle={this.state.queue.last_date}
-              avatar={<Avatar>{this.state.queue.user.username.substring(0,2)}</Avatar>}>
-            </CardHeader>
-            <CardActions>
-              <RaisedButton 
-                label="Pay"
-                primary={true}
-                fullWidth={true}
-                onTouchTap={this._pay}/>
-            </CardActions>
-            <CardText>
-              <Table>
-                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                  <TableRow>
-                    <TableHeaderColumn colSpan="3" tooltip='Dem histories' style={{textAlign: 'center'}}>
-                      Dat History
-                    </TableHeaderColumn>
-                  </TableRow>
-                  <TableRow>
-                    <TableHeaderColumn>Date</TableHeaderColumn>
-                    <TableHeaderColumn>Time</TableHeaderColumn>
-                    <TableHeaderColumn>Amount</TableHeaderColumn>
-                  </TableRow>
-                </TableHeader>
-                <TableBody displayRowCheckbox={false}>
-                  {history}
-                </TableBody>
-              </Table>
-            </CardText>
-          </Card>
+        <Row>
+          <Col md={8}>
+            <Card initiallyExpanded={true}>
+              <CardHeader
+                title={this.state.queue.user.username}
+                subtitle={this.state.queue.last_date}
+                avatar={<Avatar>{this.state.queue.user.username.substring(0,2)}</Avatar>}>
+              </CardHeader>
+              <CardActions>
+                <RaisedButton 
+                  label="Pay"
+                  primary={true}
+                  fullWidth={true}
+                  onTouchTap={this._pay.bind(this, this.state.queue)}/>
+              </CardActions>
+              <CardText>
+                <Table>
+                  <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                    <TableRow>
+                      <TableHeaderColumn colSpan="3" tooltip='Dem histories' style={{textAlign: 'center'}}>
+                        Dat History
+                      </TableHeaderColumn>
+                    </TableRow>
+                    <TableRow>
+                      <TableHeaderColumn>Date</TableHeaderColumn>
+                      <TableHeaderColumn>Time</TableHeaderColumn>
+                      <TableHeaderColumn>Amount</TableHeaderColumn>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody displayRowCheckbox={false}>
+                    {history}
+                  </TableBody>
+                </Table>
+              </CardText>
+            </Card>
 
-          <Payment ref='paymentDialog' display={this.state.payment} user={this.state.userId} />
-        </div>
+            <Payment display={this.state.payment_display} queue={this.state.payment_queue} handlePayment={this._handlePayment.bind(this)} />
+          </Col>
+          <Col md={4}>
+            <Card initiallyExpanded={true}>
+              <CardText>
+                <h5>Shart Stats</h5>
+                Stats
+              </CardText>
+            </Card>
+          </Col>
+        </Row>
       );
     }
     return (
@@ -129,10 +143,18 @@ class User extends React.Component {
     );
   }
 
-  _pay () {
-    // QueueActions.update(this.state.queue);
-    // HistoryActions.create(this.state.queue);
-    this.refs.paymentDialog.show();
+  _pay (queue) {
+    this.setState({
+      payment_display: true,
+      payment_queue: queue
+    });
+  }
+
+  _handlePayment () {
+    this.setState({
+      payment_display: false,
+      payment_queue: null
+    });
   }
 
   _onChange () {
