@@ -86,6 +86,29 @@ export default class Stats extends React.Component {
       ByMonthChart.data = data;
     }
 
+    var ByMonthUserChart = {
+      data: null,
+      chartType: 'LineChart',
+      options: {
+        title: 'Total Spent by User per Month/Year',
+        hAxis: {
+          title: 'Date',
+          showTextEvery: 4
+        },
+        vAxis: {
+          title: 'Amount'
+        },
+        animation: {
+          startup: true,
+          duration: 2000,
+          easing: 'out'
+        }
+      }
+    };
+    if (this.state.stats) {
+      ByMonthUserChart.data = this.state.stats.by_month_user_sums;
+    }
+
     return (
       <Row>
         <Col md={6}>
@@ -116,6 +139,19 @@ export default class Stats extends React.Component {
               options={ByMonthChart.options}
               graphName='by-month-year'
               chartType={ByMonthChart.chartType}/>
+          </Paper>
+        </Col>
+
+        <Col md={12}>
+          <br/>
+          <Paper>
+            <ChartWrapper
+              width={'100%'}
+              height={"300px"}
+              data={ByMonthUserChart.data}
+              options={ByMonthUserChart.options}
+              graphName='by-month-user'
+              chartType={ByMonthUserChart.chartType}/>
           </Paper>
         </Col>
       </Row>

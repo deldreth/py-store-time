@@ -152,16 +152,15 @@ class StatsViewSet (viewsets.ViewSet):
 
     @list_route(methods=['GET'])
     def aggregates(self, request):
-        history_sums = History.objects.values(
-            'user').annotate(Sum('amount')).order_by('-amount__sum')
+        history = History.objects.values('user')
+        history_sums = history.annotate(Sum('amount')).order_by('-amount__sum')
 
         for sums in history_sums:
             user = User.objects.get(pk=sums['user'])
             sums['user'] = user.username
             sums['user_id'] = user.id
 
-        history_avgs = History.objects.values(
-            'user').annotate(Avg('amount')).order_by('-amount__avg')
+        history_avgs = history.annotate(Avg('amount')).order_by('-amount__avg')
 
         for avgs in history_avgs:
             user = User.objects.get(pk=avgs['user'])
@@ -176,10 +175,39 @@ class StatsViewSet (viewsets.ViewSet):
                        ORDER BY month_year ASC')
         by_month_year = dictfetchall(cursor)
 
+        cursor.execute('SELECT to_char(date AT TIME ZONE \'EST\', \'YYYY/MM\') AS month_year, \
+                       SUM(amount) as total, user_id \
+                       FROM app_history \
+                       GROUP BY month_year, user_id \
+                       ORDER BY month_year ASC')
+        by_month_year_user = dictfetchall(cursor)
+
+        users = User.objects.all()
+        labels = ['Year/Month']
+        for user in users:
+            labels.append(user.username)
+
+        by_month_year_table = []
+        by_month_year_table.append(labels)
+        for user_spending in by_month_year_user:
+            username = users.get(pk=user_spending['user_id']).username
+            exists = False
+
+            for search in by_month_year_table:
+                if search[0] == user_spending['month_year']:
+                    exists = True
+                    search[labels.index(username)] = user_spending['total']
+
+            if not exists:
+                for_user_spending = [0] * len(labels)
+                for_user_spending[0] = user_spending['month_year']
+                by_month_year_table.append(for_user_spending)
+
         stats_serializer = StatsSerializer(data={
             'history_sums': history_sums,
             'history_avgs': history_avgs,
-            'by_month_sums': by_month_year
+            'by_month_sums': by_month_year,
+            'by_month_user_sums': by_month_year_table
             })
 
         if stats_serializer.is_valid():
