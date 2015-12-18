@@ -1,4 +1,5 @@
 var React = require('react');
+var moment = require('moment');
 
 import { Col, Row } from 'react-bootstrap';
 
@@ -32,7 +33,9 @@ const QueueActions = require('../actions/QueueActions');
 const QueueStore = require('../stores/QueueStore');
 const HistoryActions = require('../actions/HistoryActions');
 const HistoryStore = require('../stores/HistoryStore');
-// const Payment = require('./Payment');
+const ShartActions = require('../actions/ShartActions');
+const ShartStore = require('../stores/ShartStore');
+
 import Payment from './Payment';
 
 class User extends React.Component {
@@ -45,6 +48,7 @@ class User extends React.Component {
     this.state = null;
     QueueStore.addChangeListener(this._onChange);
     HistoryStore.addChangeListener(this._onChange);
+    ShartStore.addChangeListener(this._onChange);
   }
 
   getState () {
@@ -54,8 +58,12 @@ class User extends React.Component {
         return object.user.id == this.props.params.userId;
       })[0],
       history: HistoryStore.getHistory(),
+      sharts: ShartStore.getSharts().filter((object) => {
+        return object.user.id == this.props.params.userId;
+      }),
       payment_display: false,
-      payment_queue: null
+      payment_queue: null,
+      tabsValue: "payments"
     };
   }
 
@@ -82,10 +90,23 @@ class User extends React.Component {
             <TableRow key={object.id}>
               <TableRowColumn>{object.date}</TableRowColumn>
               <TableRowColumn>{object.time}</TableRowColumn>
-              <TableRowColumn>{object.amount}</TableRowColumn>
+              <TableRowColumn>${object.amount}</TableRowColumn>
             </TableRow>
           );
         }
+      });
+
+      var sharts = this.state.sharts.map(object => {
+        var date = new Date(object.date).toISOString();
+        var date_only = moment(date).format('MM/DD/YYYY');
+        var time = moment(date).format('h:mm a');
+
+        return (
+          <TableRow key={object.id}>
+            <TableRowColumn>{date_only}</TableRowColumn>
+            <TableRowColumn>{time}</TableRowColumn>
+          </TableRow>
+        );
       });
 
       context = (
@@ -106,18 +127,12 @@ class User extends React.Component {
               </CardActions>
               <CardText>
                 <Tabs>
-                  <Tab label="Payment History" value="a" >
+                  <Tab label="Payments" value="payments">
                     <Table>
                       <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
-                          <TableHeaderColumn colSpan="3" tooltip='Dem histories' style={{textAlign: 'center'}}>
-                            Dat History
-                          </TableHeaderColumn>
-                        </TableRow>
-                        <TableRow>
                           <TableHeaderColumn>Date</TableHeaderColumn>
                           <TableHeaderColumn>Time</TableHeaderColumn>
-                          <TableHeaderColumn>Amount</TableHeaderColumn>
                         </TableRow>
                       </TableHeader>
                       <TableBody displayRowCheckbox={false}>
@@ -125,8 +140,18 @@ class User extends React.Component {
                       </TableBody>
                     </Table>
                   </Tab>
-                  <Tab label="Sharts" value="b">
-                    Something is coming...
+                  <Tab label="Sharts" value="sharts">
+                    <Table>
+                      <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                        <TableRow>
+                          <TableHeaderColumn>Date</TableHeaderColumn>
+                          <TableHeaderColumn>Time</TableHeaderColumn>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody displayRowCheckbox={false}>
+                        {sharts}
+                      </TableBody>
+                    </Table>
                   </Tab>
                 </Tabs>
               </CardText>
@@ -157,6 +182,10 @@ class User extends React.Component {
       payment_display: false,
       payment_queue: null
     });
+  }
+
+  _handleTabsChange () {
+
   }
 
   _onChange () {

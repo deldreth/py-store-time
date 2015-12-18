@@ -43,9 +43,16 @@ class HistoryViewSet (viewsets.ModelViewSet):
 
 
 class ShartViewSet (viewsets.ModelViewSet):
-    queryset = Shart.objects.all()
+    # queryset = Shart.objects.all()
     serializer_class = ShartSerializer
     authentication_classes = [SessionAuthentication]
+
+    def get_queryset(self):
+        queryset = Shart.objects.all()
+        user = self.request.query_params.get('user', None)
+        if user is not None:
+            queryset = queryset.filter(user=user)
+        return queryset
 
     def create(self, request):
         created = Shart.objects.create(user=User.objects.get(
