@@ -3,6 +3,8 @@ var React = require('react');
 import { Col, Row } from 'react-bootstrap';
 import { Paper, List, ListItem, Avatar } from 'material-ui';
 
+const ChartWrapper = require('./ChartWrapper');
+
 const HistoryStore = require('../stores/HistoryStore');
 
 
@@ -55,6 +57,30 @@ export default class Stats extends React.Component {
       });
     }
 
+    var ByMonthChart = {
+      data: null,
+      chartType: 'ColumnChart',
+      options: {
+        title: 'Total Spent by Month/Year',
+        hAxis: {
+          title: 'Date'
+        },
+        vAxis: {title: 'Amount'},
+        animation: {
+          startup: true,
+          duration: 2000,
+          easing: 'out'
+        }
+      }
+    };
+    if (this.state.stats) {
+      var data = [['Date', 'Amount']];
+      this.state.stats.by_month_sums.forEach(entry => {
+        data.push([entry.month_year, entry.total]);
+      });
+      ByMonthChart.data = data;
+    }
+
     return (
       <Row>
         <Col md={6}>
@@ -72,6 +98,19 @@ export default class Stats extends React.Component {
             <List>
               {avgs}
             </List>
+          </Paper>
+        </Col>
+
+        <Col md={12}>
+          <br/>
+          <Paper>
+            <ChartWrapper
+              width={'100%'}
+              height={"300px"}
+              data={ByMonthChart.data}
+              options={ByMonthChart.options}
+              graphName='by-month-year'
+              chartType={ByMonthChart.chartType}/>
           </Paper>
         </Col>
       </Row>

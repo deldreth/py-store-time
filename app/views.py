@@ -14,6 +14,7 @@ from .serializers import (
     StatsSerializer,
     ShartSerializer,
     ShartStatsSerialiser)
+from .services import dictfetchall
 
 from datetime import datetime
 from random import randint
@@ -76,14 +77,6 @@ class ShartViewSet (viewsets.ModelViewSet):
 
         return Response({}, status.HTTP_200_OK)
 
-    def dictfetchall(self, cursor):
-        "Return all rows from a cursor as a dict"
-        columns = [col[0] for col in cursor.description]
-        return [
-            dict(zip(columns, row))
-            for row in cursor.fetchall()
-        ]
-
     @list_route(methods=['GET'])
     def stats(self, request):
         users = User.objects.all()
@@ -93,7 +86,7 @@ class ShartViewSet (viewsets.ModelViewSet):
                         COUNT(user_id), user_id \
                         FROM app_shart \
                         GROUP BY hour, user_id')
-        user_hours = self.dictfetchall(cursor)
+        user_hours = dictfetchall(cursor)
 
         hours = []
         labels = ['Hour']
@@ -116,14 +109,15 @@ class ShartViewSet (viewsets.ModelViewSet):
         hours.insert(0, labels)
 
         cursor.execute('SELECT EXTRACT(DOW FROM date AT TIME ZONE \'EST\') AS day, \
-                COUNT(user_id), user_id \
-                FROM app_shart \
-                GROUP BY day, user_id')
-        user_days = self.dictfetchall(cursor)
+                       COUNT(user_id), user_id \
+                       FROM app_shart \
+                       GROUP BY day, user_id')
+        user_days = dictfetchall(cursor)
 
         days = []
         labels = ['Day']
-        dow = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        dow = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+               'Friday', 'Saturday']
         for user in user_hours:
             username = users.get(pk=user['user_id']).username
             if username not in labels:
@@ -174,9 +168,18 @@ class StatsViewSet (viewsets.ViewSet):
             avgs['user'] = user.username
             avgs['user_id'] = user.id
 
+        cursor = connection.cursor()
+        cursor.execute('SELECT to_char(date AT TIME ZONE \'EST\', \'YYYY/MM\') AS month_year, \
+                       SUM(amount) as total \
+                       FROM app_history \
+                       GROUP BY month_year \
+                       ORDER BY month_year ASC')
+        by_month_year = dictfetchall(cursor)
+
         stats_serializer = StatsSerializer(data={
             'history_sums': history_sums,
-            'history_avgs': history_avgs
+            'history_avgs': history_avgs,
+            'by_month_sums': by_month_year
             })
 
         if stats_serializer.is_valid():

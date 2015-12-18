@@ -38,6 +38,7 @@ class ShartSerializer (serializers.ModelSerializer):
 class StatsSerializer (serializers.Serializer):
     history_sums = serializers.ListField()
     history_avgs = serializers.ListField()
+    by_month_sums = serializers.ListField()
 
 
 class ShartStatsSerialiser (serializers.Serializer):
