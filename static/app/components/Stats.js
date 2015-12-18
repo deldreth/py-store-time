@@ -59,13 +59,18 @@ export default class Stats extends React.Component {
 
     var ByMonthChart = {
       data: null,
-      chartType: 'ColumnChart',
+      chartType: 'LineChart',
       options: {
         title: 'Total Spent by Month/Year',
         hAxis: {
-          title: 'Date'
+          title: 'Date',
+          // slantedText:true,
+          // slantedTextAngle:90
+          showTextEvery: 4
         },
-        vAxis: {title: 'Amount'},
+        vAxis: {
+          title: 'Amount'
+        },
         animation: {
           startup: true,
           duration: 2000,

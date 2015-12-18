@@ -35,6 +35,11 @@ export default class ChartWrapper extends React.Component {
           document.getElementById(this.props.graphName)
         );
         break;
+      case 'LineChart':
+        chart = new google.visualization.LineChart(
+          document.getElementById(this.props.graphName)
+        );
+        break;
     }
 
     chart.draw(data, options);
