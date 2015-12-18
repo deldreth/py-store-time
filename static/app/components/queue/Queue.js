@@ -22,6 +22,7 @@ const QueueActions = require('../../actions/QueueActions');
 const QueueStore = require('../../stores/QueueStore');
 const ShartActions = require('../../actions/ShartActions');
 const ShartStore = require('../../stores/ShartStore');
+const HistoryStore = require('../../stores/HistoryStore');
 
 import Payment from '../Payment';
 
@@ -37,12 +38,14 @@ class Queue extends React.Component {
     this.state = this.getState();
     QueueStore.addChangeListener(this._onChange);
     ShartStore.addChangeListener(this._onChange);
+    HistoryStore.addChangeListener(this._onChange);
   }
 
   getState () {
     return {
       queue: QueueStore.getQueue(),
       sharts: ShartStore.getSharts(),
+      history: HistoryStore.getHistory(),
       payment_display: false,
       payment_queue: null
     };
@@ -51,6 +54,7 @@ class Queue extends React.Component {
   componentWillUnmount () {
     QueueStore.removeChangeListener(this._onChange);
     ShartStore.removeChangeListener(this._onChange);
+    HistoryStore.removeChangeListener(this._onChange);
   }
 
   render () {
@@ -69,6 +73,19 @@ class Queue extends React.Component {
               if (today.toDateString() == shart_date.toDateString()) {
                 sharts_today += 1;
               }
+            }
+          });
+        }
+
+        var history = {
+          sum: 0,
+          count: 0
+        };
+        if (this.state.history.length > 0) {
+          this.state.history.forEach(object => {
+            if (queue.user.id == object.user) {
+              history.sum += object.amount;
+              history.count += 1;
             }
           });
         }
@@ -103,7 +120,8 @@ class Queue extends React.Component {
                 <FlatButton label='History' secondary={true} onTouchTap={this._listItemTouch.bind(this, queue.user.id)}/>
               </CardActions>
               <CardText expandable={true}>
-                Something is coming...
+                <h4>Total Spent: <small>${history.sum}</small></h4>
+                <h4>Total Payments: <small>{history.count}</small></h4>
               </CardText>
             </Card>
             <br/>
