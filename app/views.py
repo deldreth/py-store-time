@@ -50,14 +50,13 @@ class ShartViewSet (viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Shart.objects.all()
-        user = self.request.query_params.get('user', None)
+        user = self.request.user
         if user is not None:
             queryset = queryset.filter(user=user)
         return queryset
 
     def create(self, request):
-        created = Shart.objects.create(user=User.objects.get(
-            username=request.data['user']))
+        created = Shart.objects.create(user=request.user)
 
         if created:
             options = [
