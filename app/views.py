@@ -4,7 +4,7 @@ from django.db import connection
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import list_route
 
 from .models import Queue, History, Shart
@@ -46,7 +46,7 @@ class HistoryViewSet (viewsets.ModelViewSet):
 class ShartViewSet (viewsets.ModelViewSet):
     # queryset = Shart.objects.all()
     serializer_class = ShartSerializer
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def get_queryset(self):
         queryset = Shart.objects.all()
@@ -57,21 +57,21 @@ class ShartViewSet (viewsets.ModelViewSet):
 
     def create(self, request):
         created = Shart.objects.create(user=User.objects.get(
-            username=request.POST['user']))
+            username=request.data['user']))
 
         if created:
-            options = [
-                'Dang. {0} just let one rip.',
-                'There may be something wrong with {0}\'s insides.',
-                'Someone open a window. {0} is fumigating.',
-                '{0} may have just shat themselves.',
-                '{0} has apparently never heard of Beano.',
-                'Noxious gas alert in the vicinity of {0}.'
-            ]
+            # options = [
+            #     'Dang. {0} just let one rip.',
+            #     'There may be something wrong with {0}\'s insides.',
+            #     'Someone open a window. {0} is fumigating.',
+            #     '{0} may have just shat themselves.',
+            #     '{0} has apparently never heard of Beano.',
+            #     'Noxious gas alert in the vicinity of {0}.'
+            # ]
 
-            text = options[randint(0, len(options) - 1)].format(created.user.username)
-            r = requests.post('https://hooks.slack.com/services/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',
-                              json={'text': text})
+            # text = options[randint(0, len(options) - 1)].format(created.user.username)
+            # r = requests.post('https://hooks.slack.com/services/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',
+            #                   json={'text': text})
             return Response(ShartSerializer(created).data,
                             status.HTTP_201_CREATED)
 
