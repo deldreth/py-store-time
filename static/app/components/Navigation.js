@@ -58,6 +58,13 @@ export default class Navigation extends React.Component {
   }
 
   render () {
+    var shartAction;
+    if (this.props.user) {
+      shartAction = (
+        <FloatingActionButton backgroundColor={Colors.lime600} mini={false} style={{position: 'fixed', bottom: 25, right: 25}}>
+          <FontIcon className='material-icons' onTouchTap={this._sharted}>cloud_queue</FontIcon>
+        </FloatingActionButton>);
+    }
     return (
       <div>
         <LeftNav
@@ -70,11 +77,7 @@ export default class Navigation extends React.Component {
         <AppBar
           title={<span>Store Time</span>}
           onLeftIconButtonTouchTap={this.showNavigation}
-          iconElementRight={
-            <FloatingActionButton backgroundColor={Colors.lime600} mini={false} style={{position: 'fixed', bottom: 25, right: 25}}>
-              <FontIcon className='material-icons' onTouchTap={this._sharted}>cloud_queue</FontIcon>
-            </FloatingActionButton>
-            }/>
+          iconElementRight={shartAction}/>
       </div>
     );
   }

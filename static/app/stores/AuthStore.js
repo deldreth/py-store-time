@@ -8,7 +8,7 @@ const CHANGE_EVENT = 'change';
 class AuthStore extends EventEmitter {
   constructor() {
     super();
-    this.user = {};
+    this.user = null;
     this.key = null;
     this.loaded = false;
     this.errors = {};
