@@ -48,8 +48,6 @@ class Navigation extends React.Component {
   }
 
   render () {
-    var avatar = <img src='/static/img/shop-icon.png' style={{height: '75px'}} />
-
     return (
       <div>
         <LeftNav
@@ -59,10 +57,10 @@ class Navigation extends React.Component {
           onChange={this._onNavChange}/>
 
         <AppBar
-          title={<span>{avatar} Store Time</span>}
+          title={<span>Store Time</span>}
           onLeftIconButtonTouchTap={this.showNavigation}
           iconElementRight={
-            <FloatingActionButton mini={false}>
+            <FloatingActionButton backgroundColor={Colors.lime600} mini={false} style={{position: 'fixed', bottom: 25, right: 25}}>
               <FontIcon className='material-icons' onTouchTap={this._sharted}>cloud_queue</FontIcon>
             </FloatingActionButton>
             }/>

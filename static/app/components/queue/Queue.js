@@ -136,6 +136,11 @@ class Queue extends React.Component {
         {queues}
 
         <Payment display={this.state.payment_display} queue={this.state.payment_queue} handlePayment={this._handlePayment.bind(this)} />
+        <Row>
+          <Col className='text-center'>
+            <img src='static/img/shop-icon.png'/>
+          </Col>
+        </Row>
       </div>
     );
   }
