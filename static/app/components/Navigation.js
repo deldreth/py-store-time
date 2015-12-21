@@ -65,12 +65,6 @@ export default class Navigation extends React.Component {
           docked={false}
           menuItems={menuItems}
           onChange={this._onNavChange}>
-            <CardMedia
-              overlay={
-                <CardTitle title={this.props.user.username} subtitle={this.props.user.email}/>
-              }>
-              <img src='/static/img/shop-icon.png'/>
-            </CardMedia>
         </LeftNav>
 
         <AppBar
