@@ -48,13 +48,7 @@ class Navigation extends React.Component {
   }
 
   render () {
-    if (this.props.user) {
-      var avatar = <Avatar>{this.props.user.username.substring(0, 2)}</Avatar>
-      if (this.props.user.email !== '') {
-        var gravatar = 'http://www.gravatar.com/avatar/' + md5(this.props.user.email);
-        avatar = <Avatar src={gravatar} />
-      }
-    }
+    var avatar = <img src='/static/img/shop-icon.png' style={{height: '75px'}} />
 
     return (
       <div>
@@ -68,7 +62,7 @@ class Navigation extends React.Component {
           title={<span>{avatar} Store Time</span>}
           onLeftIconButtonTouchTap={this.showNavigation}
           iconElementRight={
-            <FloatingActionButton mini={true}>
+            <FloatingActionButton mini={false}>
               <FontIcon className='material-icons' onTouchTap={this._sharted}>cloud_queue</FontIcon>
             </FloatingActionButton>
             }/>
