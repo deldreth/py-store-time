@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from django.db.models import Sum, Avg, Count
+from django.db.models import Sum, Avg
 from django.db import connection
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.authentication import (
+    SessionAuthentication,
+    TokenAuthentication)
 from rest_framework.decorators import list_route
+from rest_framework.authtoken.models import Token
 
 from .models import Queue, History, Shart
 from .serializers import (
@@ -13,7 +16,8 @@ from .serializers import (
     HistorySerializer,
     StatsSerializer,
     ShartSerializer,
-    ShartStatsSerialiser)
+    ShartStatsSerialiser,
+    SettingsSerializer)
 from .services import dictfetchall
 
 from datetime import datetime
@@ -23,9 +27,12 @@ import requests
 
 
 class QueueViewSet (viewsets.ModelViewSet):
+
+    """ Queue Resource """
+
     queryset = Queue.objects.all()
     serializer_class = QueueSerializer
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def create(self, request):
         object, created = Queue.objects.get_or_create(user=request.user)
@@ -38,9 +45,12 @@ class QueueViewSet (viewsets.ModelViewSet):
 
 
 class HistoryViewSet (viewsets.ModelViewSet):
+
+    """ History Resource """
+
     queryset = History.objects.all()
     serializer_class = HistorySerializer
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
 
 
 class ShartViewSet (viewsets.ModelViewSet):
@@ -214,6 +224,23 @@ class StatsViewSet (viewsets.ViewSet):
 
         return Response(stats_serializer.errors,
                         status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SettingsViewSet (viewsets.ViewSet):
+    authentication_classes = [SessionAuthentication]
+
+    def list(self, request):
+        """
+        Get an authed user's settings
+        ---
+        serializer: SettingsSerializer
+        """
+        token = Token.objects.get(user=request.user)
+        settings_serializer = SettingsSerializer(data={
+            'token': token.key
+            })
+        if settings_serializer.is_valid():
+            return Response(settings_serializer.data, status.HTTP_200_OK)
 
 
 def index(request):

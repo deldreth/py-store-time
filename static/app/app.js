@@ -12,6 +12,7 @@ var Stats = require('./components/Stats');
 var User = require('./components/User');
 var Signup = require('./components/auth/Signup');
 var Shart = require('./components/Shart');
+var Settings = require('./components/Settings');
 
 ReactDOM.render(
   <Router>
@@ -19,6 +20,7 @@ ReactDOM.render(
       <Route path='/user/:userId' component={User}/>
       <Route path='stats' component={Stats} />
       <Route path='shart' component={Shart} />
+      <Route path='settings' component={Settings} />
     </Route>
     <Route path='signup' component={Signup}/>
   </Router>,

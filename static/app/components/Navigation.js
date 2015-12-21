@@ -8,6 +8,14 @@ const LinearProgress = require('material-ui/lib/linear-progress');
 const FontIcon = require('material-ui/lib/font-icon');
 const FloatingActionButton = require('material-ui/lib/floating-action-button');
 const Avatar = require('material-ui/lib/avatar');
+
+const Card = require('material-ui/lib/card/card');
+const CardActions = require('material-ui/lib/card/card-actions');
+const CardHeader = require('material-ui/lib/card/card-header');
+const CardTitle = require('material-ui/lib/card/card-title');
+const CardText = require('material-ui/lib/card/card-text');
+const CardMedia = require('material-ui/lib/card/card-media');
+
 let Colors = require('material-ui/lib/styles/colors');
 const MyRawTheme = require('../theme');
 
@@ -16,12 +24,14 @@ const ShartActions = require('../actions/ShartActions');
 var menuItems = [
   { route: '/', text: 'Queue'},
   { route: 'stats', text: 'Statistics'},
-  { route: 'shart', text: 'Sharts' }
+  { route: 'shart', text: 'Sharts' },
+  { type: MenuItem.Types.SUBHEADER, text: 'Resources' },
+  { route: 'settings', text: 'Settings' },
 ];
 
-class Navigation extends React.Component {
-  constructor () {
-    super();
+export default class Navigation extends React.Component {
+  constructor (props) {
+    super(props);
     this.showNavigation = this.showNavigation.bind(this);
     this._onNavChange = this._onNavChange.bind(this);
     this._sharted = this._sharted.bind(this);
@@ -54,7 +64,14 @@ class Navigation extends React.Component {
           ref="leftNav"
           docked={false}
           menuItems={menuItems}
-          onChange={this._onNavChange}/>
+          onChange={this._onNavChange}>
+            <CardMedia
+              overlay={
+                <CardTitle title={this.props.user.username} subtitle={this.props.user.email}/>
+              }>
+              <img src='/static/img/shop-icon.png'/>
+            </CardMedia>
+        </LeftNav>
 
         <AppBar
           title={<span>Store Time</span>}
@@ -68,6 +85,17 @@ class Navigation extends React.Component {
     );
   }
 }
+
+Navigation.propTypes = {
+  user: React.PropTypes.object
+};
+
+Navigation.defaultProps = {
+  user: {
+    username: '',
+    email: ''
+  }
+};
 
 Navigation.childContextTypes = {
   muiTheme: React.PropTypes.object

@@ -45,3 +45,7 @@ class StatsSerializer (serializers.Serializer):
 class ShartStatsSerialiser (serializers.Serializer):
     by_hour = serializers.ListField()
     by_day = serializers.ListField()
+
+
+class SettingsSerializer (serializers.Serializer):
+    token = serializers.CharField()

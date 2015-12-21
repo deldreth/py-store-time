@@ -18,6 +18,8 @@ const Avatar = require('material-ui/lib/avatar');
 const RaisedButton = require('material-ui/lib/raised-button');
 const FlatButton = require('material-ui/lib/flat-button');
 
+const Paper = require('material-ui/lib/paper');
+
 const QueueActions = require('../../actions/QueueActions');
 const QueueStore = require('../../stores/QueueStore');
 const ShartActions = require('../../actions/ShartActions');
@@ -104,7 +106,7 @@ class Queue extends React.Component {
                 subtitle={
                   <p>
                     {queue.last_date}<br/>
-                    <span style={{color: Colors.lime900}}>{sharts} sharts, {sharts_today} today</span>
+                    <span style={{color: Colors.lime600}}>{sharts} sharts, {sharts_today} today</span>
                   </p>
                 }
                 avatar={avatar}
@@ -132,13 +134,13 @@ class Queue extends React.Component {
 
     return (
       <div>
-        <h1>The Almighty Queue</h1>
+        <br/>
         {queues}
 
         <Payment display={this.state.payment_display} queue={this.state.payment_queue} handlePayment={this._handlePayment.bind(this)} />
         <Row>
           <Col className='text-center'>
-            <img src='static/img/shop-icon.png'/>
+            <img src='static/img/shop-icon.png' style={{height: '200px'}}/>
           </Col>
         </Row>
       </div>

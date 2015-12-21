@@ -19,17 +19,18 @@ from app import views
 
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register(r'api/queue', views.QueueViewSet)
-router.register(r'api/history', views.HistoryViewSet, base_name='history')
-router.register(r'api/shart', views.ShartViewSet, base_name='shart')
-router.register(r'api/stats', views.StatsViewSet, base_name='statistics')
+router.register(r'queue', views.QueueViewSet, base_name='queue')
+router.register(r'history', views.HistoryViewSet, base_name='history')
+router.register(r'shart', views.ShartViewSet, base_name='shart')
+router.register(r'stats', views.StatsViewSet, base_name='statistics')
+router.register(r'settings', views.SettingsViewSet, base_name='settings')
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^$', views.index),
-    url(r'^', include(router.urls)),
+    url(r'^api/', include(router.urls, namespace='api')),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 ]
