@@ -38,24 +38,6 @@ class HistoryStore extends EventEmitter {
       this.loaded = true;
       this.emitChange();
     });
-
-    $.ajax({
-      url: this.api_stats + 'aggregates',
-      method: 'GET',
-      headers: {
-        'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
-      },
-      cache: false,
-    })
-    .done((data) => {
-      this.stats = data;
-      this.loaded = true;
-      this.emitChange();
-    })
-    .fail((xhr, status, err) => {
-      this.loaded = true;
-      this.emitChange();
-    });
   }
 
   getHistory () {
@@ -63,6 +45,26 @@ class HistoryStore extends EventEmitter {
   }
 
   getStats () {
+    if (this.stats == null) {
+      $.ajax({
+        url: this.api_stats + 'aggregates',
+        method: 'GET',
+        headers: {
+          'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
+        },
+        cache: false,
+      })
+      .done((data) => {
+        this.stats = data;
+        this.loaded = true;
+        this.emitChange();
+      })
+      .fail((xhr, status, err) => {
+        this.loaded = true;
+        this.emitChange();
+      });
+    }
+    
     return this.stats;
   }
 

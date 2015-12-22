@@ -25,29 +25,7 @@ class ShartStore extends EventEmitter {
       cache: false,
     })
     .done((data) => {
-      // data.forEach(entry => {
-      //   var date = new Date(entry.date).toISOString();
-      //   entry.last_date = moment(date).format('MMMM Do YYYY, h:mm a');
-      // });
       this.sharts = data;
-      this.loaded = true;
-      this.emitChange();
-    })
-    .fail((xhr, status, err) => {
-      this.loaded = true;
-      this.emitChange();
-    });
-
-    $.ajax({
-      url: this.api_stats,
-      method: 'GET',
-      headers: {
-        'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
-      },
-      cache: false,
-    })
-    .done((data) => {
-      this.stats = data;
       this.loaded = true;
       this.emitChange();
     })
@@ -62,6 +40,26 @@ class ShartStore extends EventEmitter {
   }
 
   getStats () {
+    if (this.stats.length == 0) {
+      $.ajax({
+        url: this.api_stats,
+        method: 'GET',
+        headers: {
+          'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
+        },
+        cache: false,
+      })
+      .done((data) => {
+        this.stats = data;
+        this.loaded = true;
+        this.emitChange();
+      })
+      .fail((xhr, status, err) => {
+        this.loaded = true;
+        this.emitChange();
+      });
+    }
+
     return this.stats;
   }
 
@@ -78,9 +76,6 @@ class ShartStore extends EventEmitter {
       cache: false,
     })
     .done((data) => {
-      // var date = new Date(data.date).toISOString();
-      // data.date = moment(date).format('MMMM Do YYYY, h:mm a');
-
       this.sharts.push(data);
       this.emitChange();
     })
