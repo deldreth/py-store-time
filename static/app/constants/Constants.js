@@ -5,7 +5,7 @@ module.exports = keyMirror({
   USER_LOGOUT: null,
   USER_SIGNUP: null,
   USER_UPDATE: null,
-  QUEUE_CREATE: null,
-  QUEUE_UPDATE: null,
-  HISTORY_CREATE: null,
+  QUEUE_CREATE: 'QUEUE_CREATE',
+  QUEUE_UPDATE: 'QUEUE_UPDATE',
+  HISTORY_CREATE: null
 });

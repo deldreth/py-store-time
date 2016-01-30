@@ -1,0 +1,10 @@
+{
+	"plugins": [
+		"react"
+	],
+	"ecmaFeatures": {
+		"blockBindings": true,
+		"modules": true,
+		"jsx":true
+	}
+}

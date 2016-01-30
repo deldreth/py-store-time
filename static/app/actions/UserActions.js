@@ -1,44 +1,67 @@
-const Dispatcher = require('../dispatcher/Dispatcher');
-const Constants = require('../constants/Constants');
+import fetch from 'isomorphic-fetch';
+import { checkStatus } from './utils';
 
-var UserActions = {
-  /**
-   * @param  {object} data
-   */
-  login: function (data) {
-    Dispatcher.dispatch({
-      actionType: Constants.USER_LOGIN,
-      data: data
-    });
-  },
+const API_START = 'http://127.0.0.1:8000/rest-auth/';
 
-  logout: function () {
-    Dispatcher.dispatch({
-      actionType: Constants.USER_LOGOUT,
-    });
-  },
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
-  /**
-   * @param  {object} data
-   */
-  signup: function (data) {
-    Dispatcher.dispatch({
-      actionType: Constants.USER_SIGNUP,
-      data: data
-    });
-  },
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
-  /**
-   * @param  {string} id The ID of the Supplier item
-   * @param  {object} data
-   */
-  update: function (id, data) {
-    Dispatcher.dispatch({
-      actionType: Constants.USER_UPDATE,
-      id: id,
-      data: data
-    });
-  },
-};
+function loginRequest (user) {
+  return {
+    type: LOGIN_REQUEST,
+    user
+  };
+}
 
-module.exports = UserActions;
+function loginSuccess (auth_key) {
+  return {
+    type: LOGIN_SUCCESS,
+    auth_key
+  };
+}
+
+function loginFailure (user, error) {
+  return {
+    type: LOGIN_FAILURE,
+    user,
+    error
+  };
+}
+
+export function login (username, password) {
+  return dispatch => {
+    dispatch(loginRequest(username));
+
+    return fetch(API_START + 'login/', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        // 'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
+      },
+      body: JSON.stringify({
+        username,
+        password
+      })
+    }).then(checkStatus)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(loginSuccess(json.key));
+      })
+      .catch((error) => {
+        dispatch(loginFailure(username, error));
+      });
+  };
+}
+
+function logoutRequest (user) {
+  return {
+    type: LOGOUT_REQUEST,
+    user
+  };
+}

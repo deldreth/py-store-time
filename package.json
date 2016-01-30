@@ -1,27 +1,33 @@
 {
   "name": "storetime",
-  "version": "1.0.0",
-  "description": "it takes it to the store",
+  "version": "2.0.0",
+  "description": "it takes it to the store with redux",
   "main": "/static/app/app.js",
   "scripts": {
     "build": "./node_modules/webpack/bin/webpack.js",
     "build_prod": "./node_modules/webpack/bin/webpack.js -d -p",
     "dev-server": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --port 9090",
-    "postinstall": "./node_modules/webpack/bin/webpack.js -d -p"
+    "postinstall": "./node_modules/webpack/bin/webpack.js -d -p",
+    "test": "mocha --compilers js:babel-core/register --recursive ./static/app/test"
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.com:mnb/storetime.git"
+    "url": "https://github.com/deldreth/py-store-time"
   },
   "keywords": [
     "storetime"
   ],
-  "author": "MyNewsletterBuilder",
+  "author": "Devin Eldreth",
   "license": "ISC",
   "devDependencies": {
     "eslint-config-semistandard": "^5.0.0",
     "eslint-plugin-react": "^3.11.2",
+    "fetch-mock": "^4.1.0",
+    "jsdom": "^8.0.1",
+    "mocha": "^2.4.5",
+    "nock": "^7.0.2",
     "redux-devtools": "^3.0.1",
+    "redux-mock-store": "0.0.6",
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
@@ -31,6 +37,7 @@
     "deep-equal": "^1.0.1",
     "flux": "^2.1.1",
     "history": "^1.13.1",
+    "isomorphic-fetch": "^2.2.1",
     "keymirror": "^0.1.1",
     "material-ui": "^0.14.0-rc1",
     "md5": "^2.0.0",
@@ -44,6 +51,8 @@
     "react-router": "^1.0.0",
     "react-tap-event-plugin": "^0.2.1",
     "redux": "^3.0.6",
+    "redux-logger": "^2.4.0",
+    "redux-thunk": "^1.0.3",
     "webpack": "^1.11.0"
   }
 }

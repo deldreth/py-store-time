@@ -1,72 +1,46 @@
-var React = require('react');
-
+import React from 'react';
+import { connect } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
 
 let Colors = require('material-ui/lib/styles/colors');
 
 const TextField = require('material-ui/lib/text-field');
 const RaisedButton = require('material-ui/lib/raised-button');
-const Paper = require('material-ui/lib/paper');
 const LinearProgress = require('material-ui/lib/linear-progress');
 
-const AuthStore = require('../../stores/AuthStore');
-const UserActions = require('../../actions/UserActions');
-
+import { login } from '../../actions/UserActions';
 
 class Login extends React.Component {
-  constructor () {
-    super();
-    this._onChange = this._onChange.bind(this);
+  constructor (props) {
+    super(props);
     this._login = this._login.bind(this);
-    
-    AuthStore.addChangeListener(this._onChange);
-
-    this.state = this.getState();
   }
 
-  getState () {
-    return {
-      user: AuthStore.getUser(),
-      errors: AuthStore.getErrors(),
-      loading: false
-    };
-  }
+  _login (event) {
+    event.preventDefault();
 
-  componentWillUnmount () {
-    AuthStore.removeChangeListener(this._onChange);
+    this.props.dispatch(login(
+      this.refs.username.getValue(),
+      this.refs.password.getValue()
+      )
+    );
   }
 
   render () {
-    var errors = [];
-    for(var error in this.state.errors) {
-      errors.push(this.state.errors[error][0]);
-    }
-
-    var errors_formatted = errors.map(error => {
-      return (
-        <p>
-          <span className='material-icons' style={{color: Colors.red500}}>error</span> {error}
-        </p>
-      );
-    });
-
     return (
       <div>
         <form ref='loginForm'>
-          <LinearProgress ref='loadingBar' mode='indeterminate' color={Colors.orange500} style={!this.state.loading ? {display: 'none'} : {display: 'block'}}/>
+          <LinearProgress 
+            ref='loadingBar' 
+            mode='indeterminate' 
+            color={Colors.orange500} 
+            style={!this.props.loading ? {display: 'none'} : {display: 'block'}}/>
 
-          <Row>
-            <Col md={12}>
-              <br/>
-              <Paper>
-                {errors_formatted}
-              </Paper>
-            </Col>
-          </Row>
           <Row>
             <Col md={12}>
               <TextField
                 name='username'
+                ref='username'
                 hintText='Wut is dat user name? Tsk tsk.'
                 floatingLabelText='Username'
                 type='text'
@@ -77,16 +51,11 @@ class Login extends React.Component {
             <Col md={12}>
               <TextField
                 name='password'
+                ref='password'
                 hintText='Much secure.'
                 floatingLabelText='Password'
                 type='password'
                 fullWidth={true}/>
-            </Col>
-          </Row>
-          
-          <Row>
-            <Col md={12} className='text-center'>
-
             </Col>
           </Row>
 
@@ -111,23 +80,10 @@ class Login extends React.Component {
       </div>
     );
   }
-
-  _login () {
-    this.setState({
-      errors: [],
-      loading: true
-    });
-    var formData = $(this.refs.loginForm).serializeArray();
-    var formObject = {};
-    formData.forEach(function (input) {
-      formObject[input.name] = input.value;
-    });
-    UserActions.login(formObject);
-  }
-
-  _onChange () {
-    this.setState(this.getState());
-  }
 }
 
-module.exports = Login;
+function testConnect (state) {
+  return {};
+}
+
+export default connect(testConnect)(Login);

@@ -10,6 +10,5 @@ module.exports = {
       actionType: Constants.HISTORY_CREATE,
       data
     });
-  },
-
+  }
 };
