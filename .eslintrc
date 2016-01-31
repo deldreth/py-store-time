@@ -1,10 +1,13 @@
 {
 	"plugins": [
-		"react"
+		"react",
 	],
 	"ecmaFeatures": {
 		"blockBindings": true,
 		"modules": true,
 		"jsx":true
+	},
+	"env": {
+		"mocha": true
 	}
 }

@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
-import { checkStatus } from './utils';
+import { checkStatus, getCSRF } from './utils';
 
-const API_START = 'http://127.0.0.1:8000/rest-auth/';
+export const AUTH_API = 'http://127.0.0.1:8000/rest-auth/';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -37,12 +37,12 @@ export function login (username, password) {
   return dispatch => {
     dispatch(loginRequest(username));
 
-    return fetch(API_START + 'login/', {
+    return fetch(AUTH_API + 'login/', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        // 'X-CSRFToken': $('meta[name=csrf-token]').attr('content')
+        'X-CSRFToken': getCSRF()
       },
       body: JSON.stringify({
         username,
@@ -61,7 +61,41 @@ export function login (username, password) {
 
 function logoutRequest (user) {
   return {
-    type: LOGOUT_REQUEST,
-    user
+    type: LOGOUT_REQUEST
+  };
+}
+
+function logoutSuccess () {
+  return {
+    type: LOGOUT_SUCCESS
+  };
+}
+
+function logoutFailure (error) {
+  return {
+    type: LOGOUT_FAILURE,
+    error: error
+  };
+}
+
+export function logout () {
+  return dispatch => {
+    dispatch(logoutRequest());
+
+    return fetch(AUTH_API + 'logout/', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRF()
+      }
+    }).then(checkStatus)
+      .then(response => response.json())
+      .then((json) => {
+        dispatch(logoutSuccess());
+      })
+      .catch((error) => {
+        dispatch(logoutFailure(error));
+      });
   };
 }

@@ -8,7 +8,7 @@ const TextField = require('material-ui/lib/text-field');
 const RaisedButton = require('material-ui/lib/raised-button');
 const LinearProgress = require('material-ui/lib/linear-progress');
 
-import { login } from '../../actions/UserActions';
+import { login } from '../../actions/auth';
 
 class Login extends React.Component {
   constructor (props) {

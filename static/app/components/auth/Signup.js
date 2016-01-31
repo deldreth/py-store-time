@@ -7,7 +7,7 @@ const RaisedButton = require('material-ui/lib/raised-button');
 
 const AuthStore = require('../../stores/AuthStore');
 const QueueStore = require('../../stores/QueueStore');
-const UserActions = require('../../actions/UserActions');
+const UserActions = require('../../actions/auth');
 
 
 class Signup extends React.Component {
