@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, PropType } from 'react';
 import { connect } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
 
@@ -10,7 +10,7 @@ const LinearProgress = require('material-ui/lib/linear-progress');
 
 import { login } from '../../actions/auth';
 
-class Login extends React.Component {
+export default class Login extends Component {
   constructor (props) {
     super(props);
     this._login = this._login.bind(this);
@@ -28,56 +28,39 @@ class Login extends React.Component {
 
   render () {
     return (
-      <div>
-        <form ref='loginForm'>
-          <LinearProgress 
-            ref='loadingBar' 
-            mode='indeterminate' 
-            color={Colors.orange500} 
-            style={!this.props.loading ? {display: 'none'} : {display: 'block'}}/>
+      <form>
+        <Row>
+          <Col md={12}>
+            <TextField
+              name='username'
+              ref='username'
+              hintText='Wut is dat user name? Tsk tsk.'
+              floatingLabelText='Username'
+              type='text'
+              fullWidth/>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+            <TextField
+              name='password'
+              ref='password'
+              hintText='Much secure.'
+              floatingLabelText='Password'
+              type='password'
+              fullWidth/>
+          </Col>
+        </Row>
 
-          <Row>
-            <Col md={12}>
-              <TextField
-                name='username'
-                ref='username'
-                hintText='Wut is dat user name? Tsk tsk.'
-                floatingLabelText='Username'
-                type='text'
-                fullWidth={true}/>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={12}>
-              <TextField
-                name='password'
-                ref='password'
-                hintText='Much secure.'
-                floatingLabelText='Password'
-                type='password'
-                fullWidth={true}/>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={12} className='text-right'>
-              <RaisedButton
-                primary={true}
-                label='Log In'
-                onTouchTap={this._login}/>
-            </Col>
-          </Row>
-        </form>
-
-        <hr/>
-
-        <div className='text-center'>
-          <RaisedButton
-            linkButton={true}
-            label='Sign Up'
-            href='#/signup'/>
-        </div>
-      </div>
+        <Row>
+          <Col md={12} className='text-right'>
+            <RaisedButton
+              primary
+              label='Log In'
+              onTouchTap={this._login}/>
+          </Col>
+        </Row>
+      </form>
     );
   }
 }

@@ -16,14 +16,6 @@ var Signup = require('./components/auth/Signup');
 var Shart = require('./components/Shart');
 var Settings = require('./components/Settings');
 
-/*
-<Route path='/' component={StoreTime}>
-  <Route path='/user/:userId' component={User}/>
-  <Route path='stats' component={Stats} />
-  <Route path='shart' component={Shart} />
-  <Route path='settings' component={Settings} />
-</Route>
-*/
 
 const store = configureStore();
 

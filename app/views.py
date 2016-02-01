@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import (
     SessionAuthentication,
     TokenAuthentication)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import list_route
 from rest_framework.authtoken.models import Token
 
@@ -33,6 +34,7 @@ class QueueViewSet (viewsets.ModelViewSet):
     queryset = Queue.objects.all()
     serializer_class = QueueSerializer
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request):
         object, created = Queue.objects.get_or_create(user=request.user)
@@ -51,12 +53,14 @@ class HistoryViewSet (viewsets.ModelViewSet):
     queryset = History.objects.all()
     serializer_class = HistorySerializer
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
 
 class ShartViewSet (viewsets.ModelViewSet):
     queryset = Shart.objects.all()
     serializer_class = ShartSerializer
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request):
         created = Shart.objects.create(user=request.user)
@@ -151,6 +155,7 @@ class ShartViewSet (viewsets.ModelViewSet):
 
 class StatsViewSet (viewsets.ViewSet):
     authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @list_route(methods=['GET'])
     def aggregates(self, request):
@@ -221,6 +226,7 @@ class StatsViewSet (viewsets.ViewSet):
 
 class SettingsViewSet (viewsets.ViewSet):
     authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
         """

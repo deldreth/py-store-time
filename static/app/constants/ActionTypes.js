@@ -1,0 +1,12 @@
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
+
+export const FETCH_HISTORY = 'FETCH_HISTORY';
+export const FETCH_QUEUE = 'FETCH_QUEUE';
+export const FETCH_SETTINGS = 'FETCH_SETTINGS';
+export const FETCH_USER = 'FETCH_USER';
+
+export const UPDATE_USER_PROFILE = 'UPDATE_USER_PROFILE';

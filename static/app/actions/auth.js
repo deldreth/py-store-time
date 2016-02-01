@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
-import { checkStatus, getCSRF } from './utils';
+import { checkStatus, getCSRF, setCSRF } from './utils';
+import Cookies from 'js-cookie';
 
 export const AUTH_API = 'http://127.0.0.1:8000/rest-auth/';
 
@@ -11,6 +12,8 @@ export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
+export const FETCH_USER = 'FETCH_USER';
+
 function loginRequest (user) {
   return {
     type: LOGIN_REQUEST,
@@ -18,9 +21,10 @@ function loginRequest (user) {
   };
 }
 
-function loginSuccess (auth_key) {
+function loginSuccess (user, auth_key) {
   return {
     type: LOGIN_SUCCESS,
+    user,
     auth_key
   };
 }
@@ -39,6 +43,7 @@ export function login (username, password) {
 
     return fetch(AUTH_API + 'login/', {
       method: 'post',
+      credentials: 'same-origin',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -51,7 +56,7 @@ export function login (username, password) {
     }).then(checkStatus)
       .then(response => response.json())
       .then(json => {
-        dispatch(loginSuccess(json.key));
+        dispatch(loginSuccess(username, json.key));
       })
       .catch((error) => {
         dispatch(loginFailure(username, error));
@@ -84,6 +89,7 @@ export function logout () {
 
     return fetch(AUTH_API + 'logout/', {
       method: 'post',
+      credentials: 'same-origin',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -96,6 +102,66 @@ export function logout () {
       })
       .catch((error) => {
         dispatch(logoutFailure(error));
+      });
+  };
+}
+
+export function fetchUser () {
+  return (dispatch, getState) => {
+    const { user } = getState();
+
+    if (user) {
+      return;
+    }
+
+    return fetch(AUTH_API + 'user/', {
+      method: 'get',
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRF()
+      }
+    }).then(checkStatus)
+      .then(response => response.json())
+      .then((json) => {
+        dispatch({
+          type: FETCH_USER,
+          user: json
+        });
+      })
+      .catch((error) => {
+        dispatch(logoutFailure(error));
+      });
+  };
+}
+
+export function initAuth () {
+  return (dispatch, getState) => {
+    const { user } = getState();
+
+    if (user) {
+      return;
+    }
+
+    return fetch(AUTH_API + 'user/', {
+      method: 'get',
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRF()
+      }
+    }).then(checkStatus)
+      .then(response => response.json())
+      .then((json) => {
+        dispatch({
+          type: FETCH_USER,
+          user: json
+        });
+      })
+      .catch((error) => {
+        
       });
   };
 }

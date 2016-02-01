@@ -23,7 +23,7 @@ describe('async auth actions', () => {
 
     const exceptedActions = [
       { type: actions.LOGIN_REQUEST, user: 'user' },
-      { type: actions.LOGIN_SUCCESS, auth_key: 'auth token' }
+      { type: actions.LOGIN_SUCCESS, user: 'user', auth_key: 'auth token' }
     ];
 
     const store = mockStore({}, exceptedActions, done);
